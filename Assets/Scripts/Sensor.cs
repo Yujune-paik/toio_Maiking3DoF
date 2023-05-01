@@ -38,28 +38,6 @@ public class Sensor : MonoBehaviour
 
         string text = "";
 
-        //cubeを直線に沿って動かす
-        foreach(var cube in cubeManager.syncCubes)
-        {
-            // if (line_angle - angle_diff < cube.angle && cube.angle < line_angle + angle_diff)
-            // {
-            //     Debug.Log("後退");
-                cube.Move(-50, -50, 50);
-            // }
-            // else if (cube.angle <= line_angle - angle_diff)
-            // {
-            //     Debug.Log("右回転");
-            //     // cubeを右回転させる
-            //     cube.Move(10, -10, 50);
-            // }
-            // else if (cube.angle >= line_angle + angle_diff)
-            // {
-            //     Debug.Log("左回転");
-            //     // cubeを左回転させる
-            //     cube.Move(-10, 10, 50);
-            // }
-        }
-
         foreach(var cube in cubeManager.syncCubes)
         {
             text += "Position:( "+cube.x+", "+cube.y+")\n";
