@@ -1,0 +1,70 @@
+using System;
+using System.IO;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using toio;
+
+public class ControlCube : MonoBehaviour
+{
+    public Text label;
+    public ConnectType connectType; // 接続種別
+    public int connecting_num0 = 0;
+    public int connecting_num1 = 0;
+    public int connecting_num2 = 0;
+
+    CubeManager cubeManager; // キューブマネージャ
+
+    // CSVファイルの読み込み
+    Dictionary<int, string> toio_dict = new Dictionary<int, string>();
+
+    // キューブ複数台接続
+    public int connectNum = 8; // 接続数
+
+    async void Start()
+    {
+        using (var sr = new StreamReader("Assets/toio_number.csv"))
+        {
+            while (!sr.EndOfStream)
+            {
+                var line = sr.ReadLine();
+                var values = line.Split(',');
+                toio_dict.Add(int.Parse(values[0]), values[1]);
+            }
+        }
+
+        // キューブの複数台接続
+        cubeManager = new CubeManager(connectType);
+        await cubeManager.MultiConnect(connectNum);
+    }
+
+    // フレーム毎に呼ばれる
+    void Update()
+    {
+        foreach (var cube in cubeManager.syncCubes)
+        {   
+            //toio_dict[connectiong_numX]の値を変えれば、
+            // 接続しているCubeごとに処理を分けられる
+            if(cube.id == toio_dict[connecting_num0]){
+                if (Input.GetKey(KeyCode.LeftArrow)) {
+                    cube.Move(-20, 20, 50);
+                } else if (Input.GetKey(KeyCode.RightArrow)) {
+                    cube.Move(20, -20, 50);
+                } else if (Input.GetKey(KeyCode.UpArrow)) {
+                    cube.Move(50, 50, 50);
+                } else if (Input.GetKey(KeyCode.DownArrow)) {
+                    cube.Move(-50, -50, 50);
+                }
+            }
+        }
+
+        // キューブのXY座標表示
+        string text = "";
+        foreach (var cube in cubeManager.syncCubes)
+        {
+            text += "(" + cube.x + "," + cube.y + ")\n";
+        }
+        if (text != "") this.label.text = text;
+    }
+}
