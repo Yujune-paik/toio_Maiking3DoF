@@ -6,23 +6,23 @@ using UnityEngine;
 using UnityEngine.UI;
 using toio;
 
+// ****************************
+// toio 1台のセンサーの値を取得するプログラム
+// ****************************
+
 public class Sensor : MonoBehaviour
 {
     public Text label;
     public ConnectType connectType;
-    CubeManager cubeManager;
+    CubeManager cm;
     Cube cube;
-    int line_angle=90; // 直線の角度
-    int angle_diff=5; // 直線との角度の差
 
     public int connectNum = 8;
 
-    Dictionary<int, string> toio_dict = new Dictionary<int, string>();
-
     async void Start()
     {
-        cubeManager = new CubeManager(connectType);
-        cube = await cubeManager.SingleConnect();
+        cm = new CubeManager(connectType);
+        cube = await cm.SingleConnect();
 
         // コールバックの登録
         if (cube != null)
@@ -38,7 +38,7 @@ public class Sensor : MonoBehaviour
 
         string text = "";
 
-        foreach(var cube in cubeManager.syncCubes)
+        foreach(var cube in cm.syncCubes)
         {
             text += "Position:( "+cube.x+", "+cube.y+")\n";
             text += "Angle:" + cube.angle+" deg";

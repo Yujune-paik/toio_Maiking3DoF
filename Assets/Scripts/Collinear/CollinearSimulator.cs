@@ -26,29 +26,13 @@ public class CollinearSimulator : MonoBehaviour
 
     int angle_slope = 0;
 
-    int L_cube=10,L_press=60;
-
-    int connecting_num0 = 0;
-    int connecting_num1 = 1;
-    int connecting_num2 = 2;
-
-    // CSVファイルの読み込み
-    Dictionary<int, string> toio_dict = new Dictionary<int, string>();
+    public int L_cube=10,L_press=60;
 
     // キューブ複数台接続
     public int connectNum = 3; // 接続数
 
     async void Start()
     {
-        using (var sr = new StreamReader("Assets/toio_number.csv"))
-        {
-            while (!sr.EndOfStream)
-            {
-                var line = sr.ReadLine();
-                var values = line.Split(',');
-                toio_dict.Add(int.Parse(values[0]), values[1]);
-            }
-        }
         // キューブの接続
         cm = new CubeManager(connectType);
         await cm.MultiConnect(connectNum);

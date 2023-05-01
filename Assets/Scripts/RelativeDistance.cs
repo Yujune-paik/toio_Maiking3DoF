@@ -6,9 +6,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using toio;
 
-
-// 相対距離50によるキューブの移動 → 相対角度90度によるキューブの回転
+// ***************************
+// 相対距離50によるキューブの移動 → 相対角度90度によるキューブの回転 をするプログラム
 // 相対距離:= 現在の位置から目的地までの距離
+// ***************************
 
 public class RelativeDistance : MonoBehaviour
 {
@@ -20,23 +21,11 @@ public class RelativeDistance : MonoBehaviour
     float elapsedTime = 0.0f; // 経過時間
     int phase = 0; // フェーズ
 
-    // CSVファイルの読み込み
-    Dictionary<int, string> toio_dict = new Dictionary<int, string>();
-
     // キューブ複数台接続
     public int connectNum = 3; // 接続数
 
     async void Start()
     {
-        using (var sr = new StreamReader("Assets/toio_number.csv"))
-        {
-            while (!sr.EndOfStream)
-            {
-                var line = sr.ReadLine();
-                var values = line.Split(',');
-                toio_dict.Add(int.Parse(values[0]), values[1]);
-            }
-        }
         // キューブの接続
         cm = new CubeManager(connectType);
         await cm.MultiConnect(connectNum);
