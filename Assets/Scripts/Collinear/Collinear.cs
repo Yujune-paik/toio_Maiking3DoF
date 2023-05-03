@@ -26,6 +26,9 @@ public class Collinear : MonoBehaviour
 
     int angle_slope = 0;
 
+
+    // L:距離 = 1:60
+    // (x1,y1,θ,L1) = (299,247,0,1) → (x2,y2) = (359,247)
     int L_cube=10,L_press=60;
 
     int connecting_num0 = 0;
