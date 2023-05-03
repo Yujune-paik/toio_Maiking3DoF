@@ -22,6 +22,8 @@ public class CollinearSimulator : MonoBehaviour
 
     int angle_slope = 0;
 
+    // simulatorにおいて、L:距離 = 1:10
+    // (x1,y1,θ,L1) = (140,177,0,1) → (x2,y2) = (150,177)
     public int L_cube=10, L_press=60;
 
     public int connectNum = 3;
@@ -34,11 +36,11 @@ public class CollinearSimulator : MonoBehaviour
 
     void Update()
     {
-        foreach(var handle in cm.syncHandles){
+        foreach(var navigator in cm.syncNavigators){
             if(check == 0){
-                if(handle.cube.localName == "Cube2"){
-                    pos_slope = new Vector2(handle.cube.x, handle.cube.y);
-                    angle_slope = handle.cube.angle;
+                if(navigator.cube.localName == "Cube2"){
+                    pos_slope = new Vector2(navigator.cube.x, navigator.cube.y);
+                    angle_slope = navigator.cube.angle;
                     check += 1;
                     pos_cube = CalculateNewPosition(pos_slope, angle_slope, L_cube);
                     pos_press = CalculateNewPosition(pos_slope, angle_slope, L_press);
@@ -47,29 +49,29 @@ public class CollinearSimulator : MonoBehaviour
                 }
             }else{
                 if(phase == 0){
-                    if(handle.cube.localName == "Cube0"){
-                        Movement mv = handle.Move2Target(pos_cube.x, pos_cube.y).Exec();
+                    if(navigator.cube.localName == "Cube0"){
+                        Movement mv = navigator.Navi2Target(pos_cube.x, pos_cube.y, maxSpd:50).Exec();
                         if(mv.reached) phase += 1;
                         Debug.Log("phase0");
                     }
                 }
                 else if(phase == 1){
-                    if(handle.cube.localName == "Cube1"){
-                        Movement mv = handle.Move2Target(pos_press.x, pos_press.y).Exec();
+                    if(navigator.cube.localName == "Cube1"){
+                        Movement mv = navigator.Navi2Target(pos_press.x, pos_press.y, maxSpd:50).Exec();
                         if(mv.reached) phase += 1;
                         Debug.Log("phase1");
                     }
                 }
                 else if(phase == 2){
-                    if(handle.cube.localName == "Cube0"){
-                        Movement mv = handle.Rotate2Deg(angle_slope).Exec();
+                    if(navigator.cube.localName == "Cube0"){
+                        Movement mv = navigator.handle.Rotate2Deg(angle_slope).Exec();
                         if(mv.reached) phase += 1;
                         Debug.Log("phase2");
                     }
                 }
                 else if(phase == 3){
-                    if(handle.cube.localName == "Cube1"){
-                        Movement mv = handle.Rotate2Deg(angle_slope).Exec();
+                    if(navigator.cube.localName == "Cube1"){
+                        Movement mv = navigator.handle.Rotate2Deg(angle_slope).Exec();
                         if(mv.reached) phase += 1;
                         Debug.Log("phase3");
                     }
@@ -78,8 +80,8 @@ public class CollinearSimulator : MonoBehaviour
         }
 
         string text = "";
-        foreach (var handle in cm.syncHandles){
-            text += "(" + handle.cube.x + "," + handle.cube.y + "," + handle.cube.angle + ")\n";
+        foreach (var cube in cm.syncCubes){
+            text += "(" + cube.x + "," + cube.y + "," + cube.angle + ")\n";
         }
         if (text != "") this.label.text = text;
     }

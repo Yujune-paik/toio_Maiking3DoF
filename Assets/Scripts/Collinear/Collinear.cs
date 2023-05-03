@@ -64,57 +64,61 @@ public class Collinear : MonoBehaviour
         // // 2. slopeの位置を基準にcubeとpressが向かうべき座標を計算
         // // 3. cubeとpressをそれぞれ計算した座標に移動
         // // 4. cubeとpressをslopeの角度に回転
+        if (cm.synced)
+        {
+            foreach(var handle in cm.navigators){
+                if(check == 0){
+                    if(handle.cube.id == toio_dict[connecting_num0]){
+                        // pos_slopeにCube0の座標と角度を代入
+                        pos_slope = new Vector2(handle.cube.x, handle.cube.y);
+                        angle_slope = handle.cube.angle;
+                        check += 1;
 
-        foreach(var handle in cm.syncHandles){
-            if(check == 0){
-                if(handle.cube.id == toio_dict[connecting_num0]){
-                    // pos_slopeにCube0の座標と角度を代入
-                    pos_slope = new Vector2(handle.cube.x, handle.cube.y);
-                    angle_slope = handle.cube.angle;
-                    check += 1;
-
-                    // pos_cubeとpos_pressが向かうべき座標を計算
-                    pos_cube = CalculateNewPosition(L_cube); 
-                    pos_press = CalculateNewPosition(L_press);
-                    Debug.Log("Check turns 1");
-                }
-            }else{
-                if(phase == 0){
-                    if(handle.cube.id == toio_dict[connecting_num1]){
-                        Movement mv = handle.Move2Target(pos_cube.x, pos_cube.y).Exec();
-                        if(mv.reached)  phase += 1; // 到着
-                        Debug.Log("pos_cube" + pos_cube.x + "," + pos_cube.y);
-                        Debug.Log("phase0");
+                        // pos_cubeとpos_pressが向かうべき座標を計算
+                        pos_cube = CalculateNewPosition(L_cube); 
+                        pos_press = CalculateNewPosition(L_press);
+                        Debug.Log("Check turns 1");
                     }
-                }else if(phase == 1){
-                    if(handle.cube.id == toio_dict[connecting_num2]){
-                        Movement mv = handle.Move2Target(pos_press.x, pos_press.y).Exec();
-                        if(mv.reached)  phase += 1; // 到着
-                        Debug.Log("pos_press" + pos_press.x + "," + pos_press.y);
-                        Debug.Log("phase1");
+                }else{
+                    if(phase == 0){
+                        if(handle.cube.id == toio_dict[connecting_num1]){
+                            Movement mv = handle.Navi2Target(pos_cube.x, pos_cube.y).Exec();
+                            if(mv.reached)  phase += 1; // 到着
+                            Debug.Log("pos_cube" + pos_cube.x + "," + pos_cube.y);
+                            Debug.Log("phase0");
+                        }
                     }
-                }else if(phase == 2){
-                    if(handle.cube.id == toio_dict[connecting_num1]){
-                        Movement mv = handle.Rotate2Deg(angle_slope).Exec();
-                        if(mv.reached) phase += 1; // 到着
-                        Debug.Log("phase2");
+                    else if(phase == 1){
+                        if(handle.cube.id == toio_dict[connecting_num2]){
+                            Movement mv = handle.Navi2Target(pos_press.x, pos_press.y).Exec();
+                            if(mv.reached)  phase += 1; // 到着
+                            Debug.Log("pos_press" + pos_press.x + "," + pos_press.y);
+                            Debug.Log("phase1");
+                        }
                     }
-                }else if(phase == 3){
-                    if(handle.cube.id == toio_dict[connecting_num1]){
-                        Movement mv = handle.Rotate2Deg(angle_slope).Exec();
-                        if(mv.reached) phase += 1; // 到着
-                        Debug.Log("phase3");
-                    }
+                    // else if(phase == 2){
+                    //     if(handle.cube.id == toio_dict[connecting_num1]){
+                    //         Movement mv = handle.Rotate2Deg(angle_slope).Exec();
+                    //         if(mv.reached) phase += 1; // 到着
+                    //         Debug.Log("phase2");
+                    //     }
+                    // }
+                    // else if(phase == 3){
+                    //     if(handle.cube.id == toio_dict[connecting_num1]){
+                    //         Movement mv = handle.Rotate2Deg(angle_slope).Exec();
+                    //         if(mv.reached) phase += 1; // 到着
+                    //         Debug.Log("phase3");
+                    //     }
+                    // }
                 }
             }
-        }
 
-        string text = "";
-        foreach (var handle in cm.syncHandles){
-            text += "(" + handle.cube.x + "," + handle.cube.y + "," + handle.cube.angle + ")\n";
+            string text = "";
+            foreach (var cube in cm.syncCubes){
+                text += "(" + cube.x + "," + cube.y + "," + cube.angle + ")\n";
+            }
+            if (text != "") this.label.text = text;
         }
-        if (text != "") this.label.text = text;
-
     }
 
     Vector2 CalculateNewPosition(int distance)
