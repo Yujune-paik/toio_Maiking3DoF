@@ -22,9 +22,7 @@ public class CollinearSimulator : MonoBehaviour
 
     int angle_slope = 0;
 
-    // simulatorにおいて、L:距離 = 1:10
-    // (x1,y1,θ,L1) = (140,177,0,1) → (x2,y2) = (150,177)
-    public int L_cube=10, L_press=60;
+    public int L_cube=800, L_press=10000;
 
     public int connectNum = 3;
 
@@ -47,17 +45,18 @@ public class CollinearSimulator : MonoBehaviour
                     Debug.Log("pos_cube: " + pos_cube.x + ", " + pos_cube.y);
                     Debug.Log("pos_press: " + pos_press.x + ", " + pos_press.y);
                 }
-            }else{
+            }
+            else{
                 if(phase == 0){
                     if(navigator.cube.localName == "Cube0"){
-                        Movement mv = navigator.Navi2Target(pos_cube.x, pos_cube.y, maxSpd:50).Exec();
+                        var mv = navigator.Navi2Target(pos_cube.x, pos_cube.y, maxSpd:50).Exec();
                         if(mv.reached) phase += 1;
                         Debug.Log("phase0");
                     }
                 }
-                else if(phase == 1){
+                if(phase == 1){
                     if(navigator.cube.localName == "Cube1"){
-                        Movement mv = navigator.Navi2Target(pos_press.x, pos_press.y, maxSpd:50).Exec();
+                        var mv = navigator.Navi2Target(pos_press.x, pos_press.y, maxSpd:50).Exec();
                         if(mv.reached) phase += 1;
                         Debug.Log("phase1");
                     }
@@ -86,12 +85,12 @@ public class CollinearSimulator : MonoBehaviour
         if (text != "") this.label.text = text;
     }
 
-    Vector2 CalculateNewPosition(Vector2 pos_slope, int angle_slope, int distance)
-{
-    float angleRadians = angle_slope * Mathf.Deg2Rad;
-    float x = pos_slope.x + distance * Mathf.Cos(angleRadians);
-    float y = pos_slope.y + distance * Mathf.Sin(angleRadians);
+    Vector2 CalculateNewPosition(Vector2 pos, int angle, int distance)
+    {
+        float angleRadians = angle * Mathf.Deg2Rad;
+        float x = pos.x + distance * Mathf.Cos(angleRadians);
+        float y = pos.y + distance * Mathf.Sin(angleRadians);
 
-    return new Vector2((int)x, (int)y);
-}
+        return new Vector2((int)x, (int)y);
+    }
 }
