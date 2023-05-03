@@ -185,8 +185,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   label: {fileID: 1811727978}
   connectType: 1
-  L_cube: 10
-  L_press: 60
+  L_cube: 50
+  L_press: 100
   connectNum: 3
 --- !u!1 &801544736
 GameObject:
