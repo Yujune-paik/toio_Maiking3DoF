@@ -30,6 +30,7 @@ public class Stripping : MonoBehaviour
 
     async void Start()
     {
+        // CubeのIDと名前の対応付け
         using (var sr = new StreamReader("Assets/toio_number.csv"))
         {
             while (!sr.EndOfStream)
@@ -39,6 +40,7 @@ public class Stripping : MonoBehaviour
                 toio_dict.Add(int.Parse(values[0]), values[1]);
             }
         }
+        
         // キューブの接続
         cm = new CubeManager(connectType);
         await cm.MultiConnect(connectNum);

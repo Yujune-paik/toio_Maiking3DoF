@@ -132,8 +132,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 688103286}
-  - component: {fileID: 688103287}
   - component: {fileID: 688103288}
+  - component: {fileID: 688103287}
   m_Layer: 0
   m_Name: Collinear
   m_TagString: Untagged
@@ -165,12 +165,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 688103285}
   m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ac5d71ee9b60414aab090c0cc75a879, type: 3}
+  m_Script: {fileID: 11500000, guid: 3358cab1c9efade4d86ca99d24c70202, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   label: {fileID: 1811727978}
-  connectType: 2
-  connectNum: 8
+  connectType: 1
+  connectNum: 3
 --- !u!114 &688103288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,13 +180,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 688103285}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3358cab1c9efade4d86ca99d24c70202, type: 3}
+  m_Script: {fileID: 11500000, guid: 6ac5d71ee9b60414aab090c0cc75a879, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   label: {fileID: 1811727978}
-  connectType: 1
-  L_cube: 50
-  L_press: 100
+  connectType: 2
+  slope_num: 0
+  cube_num: 1
+  press_num: 2
   connectNum: 3
 --- !u!1 &801544736
 GameObject:
