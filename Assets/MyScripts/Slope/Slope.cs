@@ -7,10 +7,10 @@ using UnityEngine.UI;
 using toio;
 
 // *********************************************************
-// 実機で3台のtoioを一列に並べるプログラム(実機 version)
+// toioに坂を登らせるプログラム(実機 version)
 // *********************************************************
 
-public class Collinear : MonoBehaviour
+public class Slope : MonoBehaviour
 {
     public Text label;
 
