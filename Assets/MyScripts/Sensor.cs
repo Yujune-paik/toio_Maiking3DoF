@@ -50,6 +50,15 @@ public class Sensor : MonoBehaviour
         }
 
         Debug.ClearDeveloperConsole();
+        
+        if(cube.isGrounded)
+        {
+            Debug.Log("接地している");
+        }
+        else
+        {
+            Debug.Log("接地していない");
+        }
     }
 
     private void OnSlope(Cube cube)

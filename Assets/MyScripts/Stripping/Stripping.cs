@@ -10,7 +10,7 @@ using toio;
 // 3台のtoioを一列に並べるプログラム(実機 version)
 // *********************************************************
 
-public class Collinear : MonoBehaviour
+public class Stripping : MonoBehaviour
 {
     public Text label;
 
@@ -31,7 +31,7 @@ public class Collinear : MonoBehaviour
     int angle_slope = 0;
 
     // L : 実際の距離[mm] = 1 : 1.4mm
-    int L_cube=60, L_press=110;
+    int L_cube=10, L_press=10;
 
     // CSVファイルの読み込み
     Dictionary<int, string> toio_dict = new Dictionary<int, string>();
