@@ -32,9 +32,11 @@ public class StrippingSimulator : MonoBehaviour
         await cm.MultiConnect(connectNum);
     }
 
-    // 後退開始時刻を保存する変数
-    float reverseStartTimeCube0 = 0f;
-    float reverseStartTimeCube2 = 0f;
+    float reverseStartTimeCube0 = 0f; // 後退を開始した時刻[s]
+    float reverseStartTimeCube2 = 0f; // 後退を開始した時刻[s]
+    bool reverseCube0 = false; // Cube0(後方)が後退したかどうか
+    bool reverseCube2 = false; // Cube2(前方)が後退したかどうか
+    float reverseDuration = 1f; // 後退する秒数[s]
 
     void Update()
     {
@@ -55,65 +57,83 @@ public class StrippingSimulator : MonoBehaviour
                     if(phase == 0){
                         if(navigator.cube.localName == "Cube0"){
                             var mv = navigator.Navi2Target(pos_cube0.x, pos_cube0.y, maxSpd:50).Exec();
-                            if(mv.reached) {
-                                phase += 1;
-                                reverseStartTimeCube0 = Time.time;
-                            }
+                            if(mv.reached) phase += 1;
                             Debug.Log("phase0");
                         }
                     }
                     if(phase == 1){
                         if(navigator.cube.localName == "Cube2"){
                             var mv = navigator.Navi2Target(pos_cube2.x, pos_cube2.y, maxSpd:50).Exec();
-                            if(mv.reached) {
-                                phase += 1;
-                                reverseStartTimeCube2 = Time.time;
-                            }
+                            if(mv.reached) phase += 1;
                             Debug.Log("phase1");
                         }
                     }
                     else if(phase == 2){
                         if(navigator.cube.localName == "Cube0"){
-                            if (Time.time - reverseStartTimeCube0 >= 10){
-                                Movement mv = navigator.handle.Rotate2Deg(angle_cube1+180).Exec();
-                                if(mv.reached) phase += 1;
-                                Debug.Log("phase2");
-                            } else {
-                                navigator.cube.TargetMove(pos_cube0.x, pos_cube0.y, angle_cube1, timeOut: 100, maxSpd: 50, targetRotationType: TargetRotationType.AbsoluteClockwise);
-                            }
+                            Movement mv = navigator.                            handle.Rotate2Deg(angle_cube1 + 180).Exec();
+                            if (mv.reached) phase += 1;
+                            Debug.Log("phase2");
                         }
                     }
-                    else if(phase == 3){
-                        if(navigator.cube.localName == "Cube2"){
-                            if (Time.time - reverseStartTimeCube2 >= 10){
-                                Movement mv = navigator.handle.Rotate2Deg(angle_cube1).Exec();
-if(mv.reached) phase += 1;
-Debug.Log("phase3");
-} else {
-navigator.cube.TargetMove(pos_cube2.x, pos_cube2.y, angle_cube1, timeOut: 100, maxSpd: 50, targetRotationType: TargetRotationType.AbsoluteClockwise);
-}
-}
-}
-}
-}
-string text = "";
-foreach (var cube in cm.syncCubes){
-if(cube.localName == "Cube0") text += "Cube0: ";
-else if(cube.localName == "Cube1") text += "Cube1: ";
-else if(cube.localName == "Cube2") text += "Cube2: ";
-text += "(" + cube.x + "," + cube.y + "," + cube.angle + ")\n";
-}
-if (text != "") this.label.text = text;
-}
+                    else if (phase == 3)
+                    {
+                        if (navigator.cube.localName == "Cube2")
+                        {
+                            Movement mv = navigator.handle.Rotate2Deg(angle_cube1).Exec();
+                            if (mv.reached)
+                            {
+                                phase += 1;
+                                reverseStartTimeCube0 = Time.time;
+                                reverseStartTimeCube2 = Time.time;
+                            }
+                            Debug.Log("phase3");
+                        }
+                    }
+                    else if (phase == 4)
+                    {
+                        if (navigator.cube.localName == "Cube0" && !reverseCube0)
+                        {
+                            navigator.cube.Move(-50, -50, 100);
+                            if (Time.time - reverseStartTimeCube0 >= reverseDuration)
+                            {
+                                navigator.handle.Stop();
+                                reverseCube0 = true;
+                            }
+                            Debug.Log("phase4 Cube0");
+                        }
+                        if (navigator.cube.localName == "Cube2" && !reverseCube2)
+                        {
+                            navigator.cube.Move(-50, -50, 100);
+                            if (Time.time - reverseStartTimeCube2 >= reverseDuration)
+                            {
+                                navigator.handle.Stop();
+                                reverseCube2 = true;
+                            }
+                            Debug.Log("phase4 Cube2");
+                        }
+                    }
+                }
+            }
+
+            string text = "";
+            foreach (var cube in cm.syncCubes)
+            {
+                if (cube.localName == "Cube0") text += "Cube0: ";
+                else if (cube.localName == "Cube1") text += "Cube1: ";
+                else if (cube.localName == "Cube2") text += "Cube2: ";
+                text += "(" + cube.x + "," + cube.y + "," + cube.angle + ")\n";
+            }
+            if (text != "") this.label.text = text;
+        }
+    }
+
+    Vector2 CalculateNewPosition(Vector2 pos, int angle, int distance)
+    {
+        float angleRadians = angle * Mathf.Deg2Rad;
+        float x = pos.x + distance * Mathf.Cos(angleRadians);
+        float y = pos.y + distance * Mathf.Sin(angleRadians);
+
+        return new Vector2((int)x, (int)y);
+    }
 }
 
-
-Vector2 CalculateNewPosition(Vector2 pos, int angle, int distance)
-{
-    float angleRadians = angle * Mathf.Deg2Rad;
-    float x = pos.x + distance * Mathf.Cos(angleRadians);
-    float y = pos.y + distance * Mathf.Sin(angleRadians);
-
-    return new Vector2((int)x, (int)y);
-}
-}
