@@ -37,7 +37,7 @@ public class Collinear : MonoBehaviour
     Dictionary<int, string> toio_dict = new Dictionary<int, string>();
 
     // Cube接続台数
-    public int connectNum = 3;
+    public int connectNum = 5;
 
     async void Start()
     {

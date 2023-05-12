@@ -17,9 +17,9 @@ public class Slope : MonoBehaviour
     CubeManager cm;
     public ConnectType connectType;
 
-    public int slope_num = 0;
-    public int cube_num = 1;
-    public int press_num = 2;
+    int slope_num = 1;
+    int cube_num = 2;
+    int press_num = 0;
 
     int phase = 0;
     int check = 0;
@@ -63,22 +63,22 @@ public class Slope : MonoBehaviour
     {
         if (cm.synced){
             foreach(var navigator in cm.syncNavigators){
-                if(check == 0){
-                    if(navigator.cube.id == toio_dict[slope_num] && navigator.cube.x != 0 && navigator.cube.y != 0){
-                        pos_slope = navigator.cube.pos;
-                        angle_slope = navigator.cube.angle;
-                        check += 1;
+                // if(check == 0){
+                //     if(navigator.cube.id == toio_dict[slope_num] && navigator.cube.x != 0 && navigator.cube.y != 0){
+                //         pos_slope = navigator.cube.pos;
+                //         angle_slope = navigator.cube.angle;
+                //         check += 1;
 
-                        pos_cube = CalculateNewPosition(pos_slope, angle_slope, L_cube);
-                        pos_press = CalculateNewPosition(pos_slope, angle_slope, L_press);
-                        Debug.Log("pos_cube: " + pos_cube.x + ", " + pos_cube.y);
-                        Debug.Log("pos_press: " + pos_press.x + ", " + pos_press.y);
+                //         pos_cube = CalculateNewPosition(pos_slope, angle_slope, L_cube);
+                //         pos_press = CalculateNewPosition(pos_slope, angle_slope, L_press);
+                //         Debug.Log("pos_cube: " + pos_cube.x + ", " + pos_cube.y);
+                //         Debug.Log("pos_press: " + pos_press.x + ", " + pos_press.y);
 
-                        pos_target = CalculateNewPosition(pos_slope, angle_slope, L_target);
-                        Debug.Log("pos_target: " + pos_target.x + ", " + pos_target.y);
-                    }
-                }
-                else{
+                //         pos_target = CalculateNewPosition(pos_slope, angle_slope, L_target);
+                //         Debug.Log("pos_target: " + pos_target.x + ", " + pos_target.y);
+                //     }
+                // }
+                // else{
                     // ***toioを一列に並べる(start)***
                     // if(phase == 0){
                     //     if(navigator.cube.id == toio_dict[cube_num]){
@@ -129,13 +129,18 @@ public class Slope : MonoBehaviour
                     // }
                     // else if(phase == 4){
                         // CubeとPressは後退し続ける
-                        if(navigator.cube.id == toio_dict[cube_num] || navigator.cube.id == toio_dict[press_num]){
-                            navigator.cube.Move(-30, -30,100);
-                            Debug.Log("phase4");
-                        }
+                        // if(navigator.cube.id == toio_dict[cube_num] || navigator.cube.id == toio_dict[press_num]){
+                            // cube_num = 2は速さ50で後退する
+                            if(navigator.cube.id == toio_dict[cube_num]) navigator.cube.Move(-50, -50,50);
+                            // // press_num = 0は速さ100で後退する
+                            else if(navigator.cube.id == toio_dict[press_num]) navigator.cube.Move(-100, -100,50);
+                            // navigator.cube.Move(-100, -100,50);
+                            // navigator.cube.Move(-100, -100,50);
+                            // Debug.Log("phase4");
+                        // }
                 //     }
                 //     // ***CubeをSlopeの直前まで移動させ、坂を登り切らせる(end)***
-                }
+                // }
             }
 
 
