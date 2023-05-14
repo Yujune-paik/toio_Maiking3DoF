@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using toio;
 
 public class SlopeSimulator : MonoBehaviour
-{
+{  
     public Text label;
 
     CubeManager cm;
@@ -99,12 +99,12 @@ public class SlopeSimulator : MonoBehaviour
                         {
                             navigator.cube.Move(-50, -50, 100);
                         }
-                    }
+                    } 
                 }
             }
 
             string text = "";
-
+           
             foreach (var cube in cm.syncCubes)
             {
                 if (cube.localName == "Cube0") text += "Cube0: ";
