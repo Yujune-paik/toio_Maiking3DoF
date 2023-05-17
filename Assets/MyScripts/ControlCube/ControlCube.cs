@@ -10,9 +10,6 @@ public class ControlCube : MonoBehaviour
 {
     public Text label;
     public ConnectType connectType; // 接続種別
-    public int connecting_num0 = 0;
-    public int connecting_num1 = 0;
-    public int connecting_num2 = 0;
 
     CubeManager cubeManager; // キューブマネージャ
 
@@ -44,19 +41,20 @@ public class ControlCube : MonoBehaviour
     {
         foreach (var cube in cubeManager.syncCubes)
         {   
-            //toio_dict[connectiong_numX]の値を変えれば、
-            // 接続しているCubeごとに処理を分けられる
-            if(cube.id == toio_dict[connecting_num0]){
-                if (Input.GetKey(KeyCode.LeftArrow)) {
-                    cube.Move(-20, 20, 50);
-                } else if (Input.GetKey(KeyCode.RightArrow)) {
-                    cube.Move(20, -20, 50);
-                } else if (Input.GetKey(KeyCode.UpArrow)) {
-                    cube.Move(50, 50, 50);
-                } else if (Input.GetKey(KeyCode.DownArrow)) {
-                    cube.Move(-50, -50, 50);
-                }
-            }
+            // //toio_dict[connectiong_numX]の値を変えれば、
+            // // 接続しているCubeごとに処理を分けられる
+            // if(cube.id == toio_dict[connecting_num0]){
+            //     if (Input.GetKey(KeyCode.LeftArrow)) {
+            //         cube.Move(-20, 20, 50);
+            //     } else if (Input.GetKey(KeyCode.RightArrow)) {
+            //         cube.Move(20, -20, 50);
+            //     } else if (Input.GetKey(KeyCode.UpArrow)) {
+            //         cube.Move(50, 50, 50);
+            //     } else if (Input.GetKey(KeyCode.DownArrow)) {
+            //         cube.Move(-50, -50, 50);
+            //     }
+            // }
+            cube.Move(-100,-100,50);
         }
 
         // キューブのXY座標表示
