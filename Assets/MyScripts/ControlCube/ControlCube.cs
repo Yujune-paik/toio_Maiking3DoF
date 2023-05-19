@@ -19,6 +19,9 @@ public class ControlCube : MonoBehaviour
     // キューブ複数台接続
     public int connectNum = 8; // 接続数
 
+    // 接続しているCubeの番号
+    public int connecting_num0 = 0;
+
     async void Start()
     {
         using (var sr = new StreamReader("Assets/toio_number.csv"))
@@ -41,20 +44,19 @@ public class ControlCube : MonoBehaviour
     {
         foreach (var cube in cubeManager.syncCubes)
         {   
-            // //toio_dict[connectiong_numX]の値を変えれば、
-            // // 接続しているCubeごとに処理を分けられる
-            // if(cube.id == toio_dict[connecting_num0]){
-            //     if (Input.GetKey(KeyCode.LeftArrow)) {
-            //         cube.Move(-20, 20, 50);
-            //     } else if (Input.GetKey(KeyCode.RightArrow)) {
-            //         cube.Move(20, -20, 50);
-            //     } else if (Input.GetKey(KeyCode.UpArrow)) {
-            //         cube.Move(50, 50, 50);
-            //     } else if (Input.GetKey(KeyCode.DownArrow)) {
-            //         cube.Move(-50, -50, 50);
-            //     }
-            // }
-            cube.Move(-100,-100,50);
+            //toio_dict[connectiong_numX]の値を変えれば、
+            // 接続しているCubeごとに処理を分けられる
+            if(cube.id == toio_dict[connecting_num0]){
+                if (Input.GetKey(KeyCode.LeftArrow)) {
+                    cube.Move(-20, 20, 50);
+                } else if (Input.GetKey(KeyCode.RightArrow)) {
+                    cube.Move(20, -20, 50);
+                } else if (Input.GetKey(KeyCode.UpArrow)) {
+                    cube.Move(30, 30, 50);
+                } else if (Input.GetKey(KeyCode.DownArrow)) {
+                    cube.Move(-30, -30, 50);
+                }
+            }
         }
 
         // キューブのXY座標表示

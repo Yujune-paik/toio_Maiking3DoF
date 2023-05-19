@@ -134,6 +134,8 @@ GameObject:
   - component: {fileID: 688103286}
   - component: {fileID: 688103288}
   - component: {fileID: 688103287}
+  - component: {fileID: 688103289}
+  - component: {fileID: 688103290}
   m_Layer: 0
   m_Name: Collinear
   m_TagString: Untagged
@@ -163,7 +165,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 688103285}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3358cab1c9efade4d86ca99d24c70202, type: 3}
   m_Name: 
@@ -188,6 +190,35 @@ MonoBehaviour:
   slope_num: 0
   cube_num: 1
   press_num: 2
+  connectNum: 3
+--- !u!114 &688103289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 688103285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2717fcfb46f8b064783101d12863b4df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  label: {fileID: 1811727978}
+  connectType: 2
+--- !u!114 &688103290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 688103285}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c14a9e66c72d31f4ab3a172b2df44df4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  label: {fileID: 1811727978}
+  connectType: 1
   connectNum: 3
 --- !u!1 &801544736
 GameObject:
@@ -610,7 +641,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5597929066422657874, guid: 8bd6ea65c87536d49ac5878fd9e412fe, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.1
       objectReference: {fileID: 0}
     - target: {fileID: 5597929066422657874, guid: 8bd6ea65c87536d49ac5878fd9e412fe, type: 3}
       propertyPath: m_LocalRotation.w

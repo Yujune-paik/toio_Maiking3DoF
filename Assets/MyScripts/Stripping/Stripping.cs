@@ -65,8 +65,6 @@ public class Stripping : MonoBehaviour
 
     void Update()
     {
-
-        
         if (cm.synced){
             foreach(var navigator in cm.syncNavigators){
                 if(check == 0){

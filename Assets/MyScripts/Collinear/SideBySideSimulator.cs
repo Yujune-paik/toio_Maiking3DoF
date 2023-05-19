@@ -7,10 +7,10 @@ using UnityEngine.UI;
 using toio;
 
 // *********************************************************
-// 実機で3台のtoioを縦一列に並べるプログラム(simulator version)
+// 実機で3台のtoioを横一列に並べるプログラム(simulator version)
 // *********************************************************
 
-public class CollinearSimulator : MonoBehaviour
+public class SideBySideSimulator : MonoBehaviour
 {
     public Text label;
 
@@ -45,8 +45,8 @@ public class CollinearSimulator : MonoBehaviour
                         pos_slope = new Vector2(navigator.cube.x, navigator.cube.y);
                         angle_slope = navigator.cube.angle;
                         check += 1;
-                        pos_cube = CalculateNewPosition(pos_slope, angle_slope, L_cube);
-                        pos_press = CalculateNewPosition(pos_slope, angle_slope, L_press);
+                        pos_cube = CalculateNewPosition(pos_slope, angle_slope+90, L_cube);
+                        pos_press = CalculateNewPosition(pos_slope, angle_slope+90, L_press);
                         Debug.Log("pos_cube: " + pos_cube.x + ", " + pos_cube.y);
                         Debug.Log("pos_press: " + pos_press.x + ", " + pos_press.y);
                     }

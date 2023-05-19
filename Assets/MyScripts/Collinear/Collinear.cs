@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using toio;
 
 // *********************************************************
-// 3台のtoioを一列に並べるプログラム(実機 version)
+// 3台のtoioを縦一列に並べるプログラム(実機 version)
 // *********************************************************
 
 public class Collinear : MonoBehaviour

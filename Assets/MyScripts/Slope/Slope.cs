@@ -5,13 +5,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using toio;
+using System.Threading.Tasks;
 
 public class Slope : MonoBehaviour
-{
+{  
     public Text label;
 
     CubeManager cm;
-    public ConnectType connectType;
+    public ConnectType connectType = ConnectType.Real;
 
     int phase = 0;
     int check = 0;
@@ -22,14 +23,19 @@ public class Slope : MonoBehaviour
 
     int angle_slope = 0;
 
-    int L_cube = 50, L_press = 100;
+    int L_cube = 70, L_press = 130;
 
     public int connectNum = 3;
 
     Dictionary<int, string> toio_dict = new Dictionary<int, string>();
 
+    int num_cube = 1;
+    int num_slope = 0;
+    int num_press = 2;
+
     async void Start()
     {
+
         using (var sr = new StreamReader("Assets/toio_number.csv"))
         {
             while (!sr.EndOfStream)
@@ -41,8 +47,20 @@ public class Slope : MonoBehaviour
         }
 
         cm = new CubeManager(connectType);
-        await cm.MultiConnect(connectNum);
+        // キューブの複数台接続
+        await ConnectToioCubes();
     }
+
+    async Task ConnectToioCubes()
+    {
+        while (cm.syncCubes.Count < connectNum)
+        {
+            await cm.MultiConnect(connectNum);
+        }
+        // 接続台数をコンソールに表示する
+        Debug.Log(cm.syncCubes.Count);
+    }
+
 
     void Update()
     {
@@ -52,7 +70,7 @@ public class Slope : MonoBehaviour
             {
                 if (check == 0)
                 {
-                    if (navigator.cube.id == toio_dict[2] && navigator.cube.x != 0 && navigator.cube.y != 0)
+                    if (navigator.cube.id == toio_dict[num_slope] && navigator.cube.x != 0 && navigator.cube.y != 0)
                     {
                         pos_slope = new Vector2(navigator.cube.x, navigator.cube.y);
                         angle_slope = navigator.cube.angle;
@@ -67,61 +85,61 @@ public class Slope : MonoBehaviour
                 {
                     if (phase == 0)
                     {
-                        if (navigator.cube.id == toio_dict[0])
+                        if (navigator.cube.id == toio_dict[num_cube])
                         {
-                            var mv = navigator.Navi2Target(pos_cube.x, pos_cube.y, maxSpd: 50).Exec();
+                            var mv = navigator.Navi2Target(pos_cube.x, pos_cube.y, maxSpd: 50,tolerance: 10).Exec();
                             if (mv.reached) phase += 1;
                             Debug.Log("phase0");
                         }
                     }
                     if (phase == 1)
                     {
-                        if (navigator.cube.id == toio_dict[1])
+                        if (navigator.cube.id == toio_dict[num_press])
                         {
-                            var mv = navigator.Navi2Target(pos_press.x, pos_press.y, maxSpd: 50).Exec();
+                            var mv = navigator.Navi2Target(pos_press.x, pos_press.y, maxSpd: 50, tolerance: 10).Exec();
                             if (mv.reached) phase += 1;
                             Debug.Log("phase1");
                         }
                     }
                     else if (phase == 2)
                     {
-                        if (navigator.cube.id == toio_dict[0])
+                        if (navigator.cube.id == toio_dict[num_cube])
                         {
-                            Movement mv = navigator.handle.Rotate2Deg(angle_slope + 90).Exec();
+                            Movement mv = navigator.handle.Rotate2Deg(angle_slope+90).Exec();
                             if (mv.reached) phase += 1;
                             Debug.Log("phase2");
                         }
                     }
                     else if (phase == 3)
                     {
-                        if (navigator.cube.id == toio_dict[1])
+                        if (navigator.cube.id == toio_dict[num_press])
                         {
-                            Movement mv = navigator.handle.Rotate2Deg(angle_slope + 90).Exec();
+                            Movement mv = navigator.handle.Rotate2Deg(angle_slope+90).Exec();
                             if (mv.reached) phase += 1;
                             Debug.Log("phase3");
                         }
                     }
                     else if (phase == 4)
                     {
-                        if (navigator.cube.id == toio_dict[0])
+                        if (navigator.cube.id == toio_dict[num_cube])
                         {
                             navigator.cube.Move(-50, -50, 100);
                         }
-                        if (navigator.cube.id == toio_dict[1])
+                        if (navigator.cube.id == toio_dict[num_press])
                         {
-                            navigator.cube.Move(-50, -50, 100);
+                            navigator.cube.Move(-100, -100, 100);
                         }
-                    }
+                    } 
                 }
             }
 
             string text = "";
-
+           
             foreach (var cube in cm.syncCubes)
             {
-                if (cube.id == toio_dict[0]) text += "Cube0: ";
-                else if (cube.id == toio_dict[1]) text += "Cube1: ";
-                else if (cube.id == toio_dict[2]) text += "Cube2: ";
+                if (cube.id == toio_dict[num_cube]) text += "Cube" + num_cube + ": ";
+                else if (cube.id == toio_dict[num_press]) text += "Cube" + num_press + ": ";
+                else if (cube.id == toio_dict[num_slope]) text += "Cube" + num_slope + ": ";
 
                 text += "(" + cube.x + "," + cube.y + "," + cube.angle + ")\n";
             }

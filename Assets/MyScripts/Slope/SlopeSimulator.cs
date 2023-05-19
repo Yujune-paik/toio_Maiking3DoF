@@ -93,7 +93,7 @@ public class SlopeSimulator : MonoBehaviour
                     {
                         if (navigator.cube.localName == "Cube0")
                         {
-                            navigator.cube.Move(-50, -50, 100);
+                            navigator.cube.Move(-30, -30, 100);
                         }
                         if (navigator.cube.localName == "Cube1")
                         {
