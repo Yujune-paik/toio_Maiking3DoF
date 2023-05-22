@@ -8,7 +8,7 @@ using toio;
 
 public class Connecting : MonoBehaviour
 {
-    public Text label;
+    // public Text label;
 
     CubeManager cm;
     public ConnectType connectType;
@@ -25,6 +25,9 @@ public class Connecting : MonoBehaviour
 
     public int connectNum = 2;
     Dictionary<int, string> toio_dict = new Dictionary<int, string>();
+
+    int Cube_left=1;
+    int Cube_right=0;
 
     async void Start()
     {
@@ -43,18 +46,13 @@ public class Connecting : MonoBehaviour
         }
     }
 
-    // 全身を開始した時刻[s]
-    float StartTime = 0.0f;
-    //前進する秒数[ms]
-    float Duration = 0.5f;
-
     void Update()
     {
         if (cm.synced)
         {
             foreach (var navigator in cm.syncNavigators)
             {
-                if (navigator.cube.id == toio_dict[3] && navigator.cube.x != 0 && navigator.cube.y != 0)
+                if (navigator.cube.id == toio_dict[Cube_left] && navigator.cube.x != 0 && navigator.cube.y != 0)
                 {
                     pos_cube_left = new Vector2(navigator.cube.x, navigator.cube.y);
                     angle_left = navigator.cube.angle;
@@ -66,7 +64,7 @@ public class Connecting : MonoBehaviour
                 {
                     if (phase == 0)
                     {
-                        if (navigator.cube.id == toio_dict[5])
+                        if (navigator.cube.id == toio_dict[Cube_right])
                         {
                             var mv = navigator.Navi2Target(pos_pre_cube_right.x, pos_pre_cube_right.y, maxSpd: 50).Exec();
                             if (mv.reached) phase += 1;
@@ -75,7 +73,7 @@ public class Connecting : MonoBehaviour
                     }
                     else if (phase == 1)
                     {
-                        if (navigator.cube.id == toio_dict[5])
+                        if (navigator.cube.id == toio_dict[Cube_right])
                         {
                             Movement mv = navigator.handle.Rotate2Deg(angle_left).Exec();
                             if (mv.reached) phase += 1;
@@ -84,27 +82,26 @@ public class Connecting : MonoBehaviour
                     }
                     else if (phase == 2)
                     {
-                        if (navigator.cube.id == toio_dict[5])
+                        if (navigator.cube.id == toio_dict[Cube_right])
                         {
                             // ここをcube.TargetMove()を用いて、pos_cube_rightに移動させる
-                            navigator.cube.TargetMove((int)pos_cube_right.x, (int)pos_cube_right.y, angle_left, maxSpd: 50);
-
-                            phase += 1;
+                            navigator.cube.TargetMove((int)pos_cube_right.x, (int)pos_cube_right.y, 340, angle_left, maxSpd: 50);
+                            if(navigator.cube.pos == pos_cube_right) phase += 1;
                             Debug.Log("phase2");
                         }
                     }
                 }
             }
 
-            string text = "";
-            foreach (var cube in cm.syncCubes)
-            {
-                if (cube.id == toio_dict[1]) text += "Cube_left: ";
-                else if (cube.id == toio_dict[2]) text += "Cube_right: ";
+            // string text = "";
+            // foreach (var cube in cm.syncCubes)
+            // {
+            //     if (cube.id == toio_dict[1]) text += "Cube_left: ";
+            //     else if (cube.id == toio_dict[2]) text += "Cube_right: ";
 
-                text += "(" + cube.x + "," + cube.y + "," + cube.angle + ")\n";
-            }
-            if (text != "") this.label.text = text;
+            //     text += "(" + cube.x + "," + cube.y + "," + cube.angle + ")\n";
+            // }
+            // if (text != "") this.label.text = text;
         }
     }
 

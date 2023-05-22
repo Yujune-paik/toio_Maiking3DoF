@@ -17,8 +17,6 @@ public class Sensor : MonoBehaviour
     CubeManager cm;
     Cube cube;
 
-    public int connectNum = 8;
-
     async void Start()
     {
         cm = new CubeManager(connectType);

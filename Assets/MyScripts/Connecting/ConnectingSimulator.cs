@@ -31,11 +31,6 @@ public class ConnectingSimulator : MonoBehaviour
         await cm.MultiConnect(connectNum);
     }
 
-    // 全身を開始した時刻[s]
-    float StartTime = 0.0f;
-    //前進する秒数[ms]
-    float Duration = 0.5f;
-
     void Update()
     {
         if (cm.synced){
