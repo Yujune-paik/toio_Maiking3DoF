@@ -348,6 +348,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1264337315}
   - component: {fileID: 1264337316}
+  - component: {fileID: 1264337317}
+  - component: {fileID: 1264337318}
   m_Layer: 0
   m_Name: Moving
   m_TagString: Untagged
@@ -377,13 +379,42 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1264337314}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c2593954ee08cd74a9714bc9bf203307, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   label: {fileID: 1689003925}
   connectType: 2
+--- !u!114 &1264337317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1264337314}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21e592d41c6c67945b64873538c5ce46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  label: {fileID: 1689003925}
+  connectType: 2
+--- !u!114 &1264337318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1264337314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3828852db3b509c41a8bd16d8465047c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  connectType: 2
+  reference_toio_id: 1
+  distance_threshold: 30
 --- !u!1 &1689003923
 GameObject:
   m_ObjectHideFlags: 0
@@ -419,7 +450,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100, y: -20}
+  m_AnchoredPosition: {x: 10, y: -10}
   m_SizeDelta: {x: 500, y: 400}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1689003925
