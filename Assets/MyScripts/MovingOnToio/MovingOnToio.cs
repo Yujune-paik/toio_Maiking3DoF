@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using toio;
 
-public class MoveToio : MonoBehaviour
+public class MovingOnToio : MonoBehaviour
 {
     CubeManager cm;
     public ConnectType connectType;
