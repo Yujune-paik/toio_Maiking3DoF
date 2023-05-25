@@ -61,6 +61,8 @@ public class WhereIsToio : MonoBehaviour
             this.label.text = text;
         }
 
+        string labelText = "";
+
         // toioの位置が、toio_posのどこかに近づいたら、そのtoioの番号を表示する
         foreach(var cube in cm.syncCubes)
         {
@@ -68,10 +70,12 @@ public class WhereIsToio : MonoBehaviour
             {
                 if(Mathf.Abs(cube.x - pos.Value.x) < 10 && Mathf.Abs(cube.y - pos.Value.y) < 10)
                 {
-                    Debug.Log("toio["+ pos.Key +"]の上にあるよ");
+                    labelText = "toio["+ pos.Key +"]の上にあるよ";
                 }
             }
         }
+
+        this.label.text = labelText;
     }
 
     private void OnSlope(Cube cube)

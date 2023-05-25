@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.3731193, g: 0.38073996, b: 0.35872698, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311918, g: 0.3807398, b: 0.35872716, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -413,9 +413,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3828852db3b509c41a8bd16d8465047c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  label: {fileID: 1689003925}
   connectType: 2
-  reference_toio_id: 1
-  distance_threshold: 30
 --- !u!114 &1264337319
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -428,8 +427,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56faeb007e0d7e3449bd951557bef68f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  label: {fileID: 1689003925}
   connectType: 2
-  distance_threshold: 30
 --- !u!1 &1689003923
 GameObject:
   m_ObjectHideFlags: 0

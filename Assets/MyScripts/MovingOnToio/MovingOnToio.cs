@@ -3,107 +3,110 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using toio;
+
+// *************************************
+// 上のtoioが隣のtoioへ移動するプログラム
+// *************************************
 
 public class MovingOnToio : MonoBehaviour
 {
-    CubeManager cm;
+    public Text label;
     public ConnectType connectType;
+    CubeManager cm;
+    Cube cube;
 
-    Dictionary<int, string> toio_dict = new Dictionary<int, string>();
-    Dictionary<int, Vector2> toio_pos = new Dictionary<int, Vector2>();
+    // Cubeの接続台数
+    int cube_num = 5;
 
-    public int top_toio_num = 0;  // 上のtoioの番号
-    public int under_toio0_num = 1;  // 下のtoioの番号
-    public int under_toio1_num = 2;  // 隣のtoioの番号
+    // 上に乗っているtoioの番号
+    int onToioNum = 0;
 
-    public int distance_threshold = 30;
-    public int rotate_threshold = 30;
-    public int translate_speed = 100;
-    public int rotate_speed = 100;
+    // CSVファイルの読み込み
+    Dictionary<int, string> toio_dict = new Dictionary<int, string>(); // Cubeの番号とIDの対応付け
+    Dictionary<int, Vector2> toio_pos = new Dictionary<int, Vector2>(); // Cubeの番号と座標の対応付け
 
     async void Start()
     {
-        cm = new CubeManager(connectType);
-        await cm.MultiConnect(3);
-
+        // CubeのIDと名前の対応付け
         using (var sr = new StreamReader("Assets/toio_number.csv"))
         {
             while (!sr.EndOfStream)
             {
                 var line = sr.ReadLine();
                 var values = line.Split(',');
-                toio_dict.Add(int.Parse(values[0]), values[1]);
-                toio_pos.Add(int.Parse(values[0]), new Vector2(int.Parse(values[2]), int.Parse(values[3])));
+                toio_dict.Add(int.Parse(values[0]), values[1]); // Cubeの番号とIDの対応付け
+                toio_pos.Add(int.Parse(values[0]), new Vector2(int.Parse(values[2]), int.Parse(values[3]))); // Cubeの番号と座標の対応付け
             }
         }
+
+        cm = new CubeManager(connectType);
+        await cm.MultiConnect(cube_num);
     }
 
     void Update()
     {
-        if (cm.synced)
-        {
-            Cube top_toio = GetCubeByID(toio_dict[top_toio_num]);
-            Cube under_toio0 = GetCubeByID(toio_dict[under_toio0_num]);
-            Cube under_toio1 = GetCubeByID(toio_dict[under_toio1_num]);
+        //以下のステップ1~6を、GetToioOnTopText()とCalculateAngle()とGetCubeId()を適宜用いて、実装してください。
+        // ステップ1: toioキューブの位置設定 - 初期設定として各toioキューブの位置情報を保持するためのデータ構造を設定します。キューブの番号をキーとし、座標を値とするようなディクショナリ（onToio_pos）を作成します。
 
-            if (top_toio != null && under_toio0 != null && under_toio1 != null)
-            {
-                float distance = CalculateDistance(under_toio0, under_toio1);
-                if (distance <= distance_threshold)
+
+        // ステップ2: キューブ位置情報の取得と追跡 - WhereIsToio.csスクリプトを使用して、各キューブの位置を定期的に取得し、その位置情報を更新します。ここでcm.syncCubesの各キューブについてループを回し、座標情報を取得します。
+
+        // ステップ3: 近接キューブの検出 - 取得したキューブの位置情報を初期設定のonToio_posと比較します。あるキューブが特定のtoio_posの位置に近接している（ここで「近接」は、x座標とy座標の差が10未満であることを意味します）場合、そのキューブは該当のonToio_posのキューブの上にあると判断します。
+
+        // ステップ4: onToio_posの回転 - 上記の情報を元に、under_toio0に対するunder_toio1の角度までtop_toioを回転させます。これは、top_toioが正確にunder_toio1に向かって移動できるようにするためです。
+
+        // ステップ5: onToio_posの移動 - onToio_posをunder_toio0からunder_toio1へ移動させます。この操作はonToio_posの上にある物体を適切に移動させるために必要です。
+
+        // ステップ6: 結果の表示 - 最後に、onToio_posがunder_toio1に移動したことを確認し、その結果をUIに表示します。これはユーザーに現在のキューブの位置と状態を視覚的に理解してもらうためです。
+
+
+
+        // // 上に乗っているtoioの番号をLabelに表示
+        // string labelText = GetToioOnTopText();
+        // this.label.text = labelText;
+    }
+
+    // 上に乗っているtoioの真下のtoioの番号を更新する関数
+    string GetToioOnTopText()
+    {
+        string labelText = "";
+
+        foreach(var cube in cm.syncCubes)
+        {   
+            if(cube.id == toio_dict[onToioNum]){
+                foreach(var pos in toio_pos)
                 {
-                    float orientation = CalculateOrientation(under_toio0, under_toio1);
-                    orientation = (orientation == 360) ? 0 : orientation;
-
-                    // Rotate top_toio to orientation angle
-                    top_toio.RotateTo(toio_dict[top_toio_num], (int)orientation, rotate_speed, 0);
-
-                    // Move top_toio forward by distance_threshold
-                    top_toio.Move(distance_threshold, 0, translate_speed);
-
-                    // Log toio under top_toio
-                    foreach (var item in toio_dict)
+                    if(Mathf.Abs(cube.x - pos.Value.x) < 10 && Mathf.Abs(cube.y - pos.Value.y) < 10)
                     {
-                        Cube cube = GetCubeByID(item.Value);
-                        if (cube != null)
-                        {
-                            if (CalculateDistance(top_toio, cube) <= distance_threshold)
-                            {
-                                Debug.Log("Top toio is on toio number " + item.Key);
-                            }
-                        }
+                        labelText = "toio["+ pos.Key +"]の上にあるよ";
                     }
                 }
             }
         }
+
+        return labelText;
     }
 
-    float CalculateDistance(Cube cube1, Cube cube2)
+    // あるtoioに対して、もう一方のtoioがどの角度にくっついているか計算する関数
+    int CalculateAngle(Cube refCube, Cube targetCube)
     {
-        int dx = cube1.x - cube2.x;
-        int dy = cube1.y - cube2.y;
-        return Mathf.Sqrt(dx*dx + dy*dy);
-    }
-
-    float CalculateOrientation(Cube referenceCube, Cube neighboringCube)
-    {
-        float dx = neighboringCube.x - referenceCube.x;
-        float dy = neighboringCube.y - referenceCube.y;
-
-        float angle = Mathf.Atan2(dy, dx) * Mathf.Rad2Deg;
+        int dx = targetCube.x - refCube.x;
+        int dy = targetCube.y - refCube.y;
+        int angle = (int)(Mathf.Atan2(dy, dx) * Mathf.Rad2Deg) - refCube.angle;
         angle = (angle + 360) % 360;
 
-        angle = Mathf.Floor(angle/10)*10;  // round to nearest 10
-        return angle;
+        return (angle / 90) * 90; // 0°、90°、180°、270°、360°(=0°)に近似する
     }
 
-    Cube GetCubeByID(string id)
+    // 「cebe.id → Cubeの番号」 へ変換する関数
+    int GetCubeId(string cubeId)
     {
-        foreach (Cube cube in cm.syncedCubes)
+        foreach(var item in toio_dict)
         {
-            if (cube.id == id)
-                return cube;
+            if(item.Value == cubeId) return item.Key;
         }
-        return null;
+        return -1;
     }
 }
