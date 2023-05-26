@@ -23,6 +23,15 @@ public class MovingOnToio : MonoBehaviour
     // 上に乗っているtoioの番号
     int onToioNum = 0;
 
+    // onToioの下にあるtoioの番号
+    int underToioNum0 = 1;
+
+    // underToioの隣にあるtoioの番号
+    int underToioNum1 = 2;
+
+    // toioの移動距離
+    int distance = 30;
+
     // CSVファイルの読み込み
     Dictionary<int, string> toio_dict = new Dictionary<int, string>(); // Cubeの番号とIDの対応付け
     Dictionary<int, Vector2> toio_pos = new Dictionary<int, Vector2>(); // Cubeの番号と座標の対応付け
@@ -47,25 +56,23 @@ public class MovingOnToio : MonoBehaviour
 
     void Update()
     {
-        //以下のステップ1~6を、GetToioOnTopText()とCalculateAngle()とGetCubeId()を適宜用いて、実装してください。
-        // ステップ1: toioキューブの位置設定 - 初期設定として各toioキューブの位置情報を保持するためのデータ構造を設定します。キューブの番号をキーとし、座標を値とするようなディクショナリ（onToio_pos）を作成します。
+        // Calculate the angle between underToio0 and underToio1
+        int angle = CalculateAngle(cm.syncCubes[underToio0], cm.syncCubes[underToio1]);
 
+        // Rotate the onToio to the direction of underToio1
+        Cube onToioCube = cm.syncCubes[onToioNum];
+        // Here we are assuming that cm.handles[onToioNum] will return the handle for the onToio cube
+        cm.handles[onToioNum].Update();
+        cm.handles[onToioNum].RotateByDeg(angle, 40).Exec();
 
-        // ステップ2: キューブ位置情報の取得と追跡 - WhereIsToio.csスクリプトを使用して、各キューブの位置を定期的に取得し、その位置情報を更新します。ここでcm.syncCubesの各キューブについてループを回し、座標情報を取得します。
+        // Move the onToio to the direction of underToio1
+        // We are not sure about the distance you want to move the onToio cube. Please replace 'distance' with the actual value you want.
+        cm.handles[onToioNum].Update();
+        cm.handles[onToioNum].TranslateByDist(distance, 40).Exec();
 
-        // ステップ3: 近接キューブの検出 - 取得したキューブの位置情報を初期設定のonToio_posと比較します。あるキューブが特定のtoio_posの位置に近接している（ここで「近接」は、x座標とy座標の差が10未満であることを意味します）場合、そのキューブは該当のonToio_posのキューブの上にあると判断します。
-
-        // ステップ4: onToio_posの回転 - 上記の情報を元に、under_toio0に対するunder_toio1の角度までtop_toioを回転させます。これは、top_toioが正確にunder_toio1に向かって移動できるようにするためです。
-
-        // ステップ5: onToio_posの移動 - onToio_posをunder_toio0からunder_toio1へ移動させます。この操作はonToio_posの上にある物体を適切に移動させるために必要です。
-
-        // ステップ6: 結果の表示 - 最後に、onToio_posがunder_toio1に移動したことを確認し、その結果をUIに表示します。これはユーザーに現在のキューブの位置と状態を視覚的に理解してもらうためです。
-
-
-
-        // // 上に乗っているtoioの番号をLabelに表示
-        // string labelText = GetToioOnTopText();
-        // this.label.text = labelText;
+        // Display the number of the underToio1 on the UI.Text
+        string labelText = GetToioOnTopText();
+        this.label.text = labelText;
     }
 
     // 上に乗っているtoioの真下のtoioの番号を更新する関数

@@ -76,28 +76,28 @@ public class Collinear : MonoBehaviour
                 else{
                     if(phase == 0){
                         if(navigator.cube.id == toio_dict[cube_num]){
-                            var mv = navigator.Navi2Target(pos_cube.x, pos_cube.y, maxSpd:50).Exec();
+                            var mv = navigator.Navi2Target(pos_cube.x, pos_cube.y, maxSpd:50).Exec(); // 他のtoioへぶつからずに、目標地点に到達する
                             if(mv.reached) phase += 1;
                             Debug.Log("phase0");
                         }
                     }
                     if(phase == 1){
                         if(navigator.cube.id == toio_dict[press_num]){
-                            var mv = navigator.Navi2Target(pos_press.x, pos_press.y, maxSpd:50).Exec();
+                            var mv = navigator.Navi2Target(pos_press.x, pos_press.y, maxSpd:50).Exec(); // 他のtoioへぶつからずに、目標地点に到達する
                             if(mv.reached) phase += 1;
                             Debug.Log("phase1");
                         }
                     }
                     else if(phase == 2){
                         if(navigator.cube.id == toio_dict[cube_num]){
-                            Movement mv = navigator.handle.Rotate2Deg(angle_slope).Exec();
+                            Movement mv = navigator.handle.Rotate2Deg(angle_slope).Exec(); // toioを目標の角度まで回転させる
                             if(mv.reached) phase += 1;
                             Debug.Log("phase2");
                         }
                     }
                     else if(phase == 3){
                         if(navigator.cube.id == toio_dict[press_num]){
-                            Movement mv = navigator.handle.Rotate2Deg(angle_slope).Exec();
+                            Movement mv = navigator.handle.Rotate2Deg(angle_slope).Exec(); // toioを目標の角度まで回転させる
                             if(mv.reached) phase += 1;
                             Debug.Log("phase3");
                         }
