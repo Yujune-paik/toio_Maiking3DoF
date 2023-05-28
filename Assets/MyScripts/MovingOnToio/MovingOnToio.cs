@@ -31,6 +31,12 @@ public class MovingOnToio : MonoBehaviour
     // toioの移動距離
     int distance = 30;
 
+    // onToioがnextToioへ移動する角度
+    int angle_NextToio = 0;
+
+    // 全体のStepの管理
+    int step = 0;
+
     // onToioがnextToioへ移動する段階を管理
     int phase_Move2NextToio = 0;
 
@@ -38,15 +44,12 @@ public class MovingOnToio : MonoBehaviour
     Dictionary<int, string> toio_dict = new Dictionary<int, string>(); // Cubeの番号とIDの対応付け
     Dictionary<int, Vector2> toio_pos = new Dictionary<int, Vector2>(); // Cubeの番号と座標の対応付け
 
-    // labelに追加する文字列
-    string labelText = "";
-
     // underToioの隣にあるtoioの番号と角度を保存する辞書
     Dictionary<int, int> adjacentCubesInfo = new Dictionary<int, int>();
 
     async void Start()
     {
-        // CubeのIDと名前の対応付け
+        // Cubeの番号とIDの対応付け, Cubeの番号と座標の対応付け
         using (var sr = new StreamReader("Assets/toio_number.csv"))
         {
             while (!sr.EndOfStream)
@@ -64,28 +67,52 @@ public class MovingOnToio : MonoBehaviour
 
     void Update()
     {   
+        // labelの初期化
         string labelText = "";
 
         foreach(var handle in cm.syncHandles)
         {   
-            if(handle.cube.id == toio_dict[onToioNum])
+            if(step == 0 && handle.cube.id == toio_dict[onToioNum])
             {
                 // onToioの真下のtoioの番号(underToioNum)を更新
                 underToioNum = GetUnderToio(handle.cube);
+                step ++;
+                Debug.Log("1");
             }
-            else if(underToioNum != -1 && handle.cube.id == toio_dict[underToioNum])
+            else if(step == 1 && underToioNum != -1 && handle.cube.id == toio_dict[underToioNum])
             {
-                // underToioの隣にあるtoioの番号(nextToioNum)と角度を更新
+                // underToioの隣にあるtoioの番号(nextToioNum)と角度(angle_NextToio)を更新
                 adjacentCubesInfo = GetAdjacentCubesInfo(handle.cube, cm.syncCubes);
-
                 foreach (KeyValuePair<int, int> entry in adjacentCubesInfo)
                 {
-                    labelText += $"toio[{entry.Key}]が{entry.Value}°の位置でくっついているよー\n";
+                    nextToioNum = entry.Key;
+                    angle_NextToio = entry.Value;
                 }
+                step ++;
+                Debug.Log("2");
+            }
+            else if(step == 2 && nextToioNum != -1 && handle.cube.id == toio_dict[onToioNum])
+            {
+                // onToioをangle_NextToioの角度に一致するように回転させる
+                if(phase_Move2NextToio == 0)
+                {
+                    handle.Rotate2Deg(angle_NextToio,40).Exec();
+                    phase_Move2NextToio += 1;
+                    Debug.Log("onToioをangle_NextToioの角度に一致するように回転させた");
+                }
+                else if(phase_Move2NextToio == 1)
+                {
+                    // onToioを相対距離30(=distance)移動させる
+                    handle.TranslateByDist(distance, 40).Exec();
+                    phase_Move2NextToio += 1;
+                    Debug.Log("onToioを相対距離30(=distance)移動させた");
+                }
+                step ++;
+                Debug.Log("3");
             }
         }
 
-        
+        // 
 
         // GetUnderToio()の使い方
         // foreach(var cube in cm.syncCubes)
@@ -155,11 +182,14 @@ public class MovingOnToio : MonoBehaviour
         //     labelText += $"toio[{entry.Key}]が{entry.Value}°の位置でくっついているよー\n";
         // }
 
-
-
         // Display the number of the underToio1 on the UI.Text
         labelText += $"onToio: {onToioNum}\n";
         labelText += $"underToio: {underToioNum}\n";
+
+        foreach (KeyValuePair<int, int> entry in adjacentCubesInfo)
+        {
+            labelText += $"toio[{entry.Key}]が{entry.Value}°の位置でくっついているよー\n";
+        }
         this.label.text = labelText;
     }
 
