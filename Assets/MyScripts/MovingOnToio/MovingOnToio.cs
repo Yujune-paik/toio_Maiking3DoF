@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using toio;
+using System.Threading.Tasks; 
 
 // *************************************
 // 上のtoioが隣のtoioへ移動するプログラム
@@ -17,7 +18,7 @@ public class MovingOnToio : MonoBehaviour
     CubeManager cm;
 
     // Cubeの接続台数
-    int cube_num = 5;
+    int connectingCubeNum = 3;
 
     // 上に乗っているtoioの番号
     int onToioNum = 0;
@@ -27,6 +28,9 @@ public class MovingOnToio : MonoBehaviour
 
     // underToio0の隣にあるtoioの番号
     int nextToioNum = -1;
+
+    // onToioを移動させたいtoioの番号
+    int targetToioNum = 1;
 
     // toioの移動距離
     int distance = 30;
@@ -62,13 +66,39 @@ public class MovingOnToio : MonoBehaviour
         }
 
         cm = new CubeManager(connectType);
-        await cm.MultiConnect(cube_num);
+        // キューブの複数台接続
+        await ConnectToioCubes();
     }
+
+    async Task ConnectToioCubes()
+    {
+        int count = 0;
+        while (cm.syncCubes.Count < connectingCubeNum)
+        {
+            await cm.MultiConnect(connectingCubeNum);
+        }
+
+        // 接続台数をコンソールに表示する
+        Debug.Log("ConnectToioCubes():" + cm.syncCubes.Count + "台接続しました");
+    }
+
+    int f=0;
 
     void Update()
     {   
         // labelの初期化
         string labelText = "";
+
+        // 接続が完了していない場合は何もしない
+        if (cm.syncCubes.Count < connectingCubeNum)
+            return;
+
+        // foreach(var handle in cm.handles){
+        //     if(f==0){
+        //         handle.cube.Move(20,20,600);
+        //         f=1;
+        //     }
+        // }
 
         foreach(var handle in cm.syncHandles)
         {   
@@ -76,8 +106,10 @@ public class MovingOnToio : MonoBehaviour
             {
                 // onToioの真下のtoioの番号(underToioNum)を更新
                 underToioNum = GetUnderToio(handle.cube);
+                if(underToioNum == -1) return;
                 step ++;
-                Debug.Log("1");
+                Debug.Log("step.1");
+                Debug.Log("underToioNum: " + underToioNum);
             }
             else if(step == 1 && underToioNum != -1 && handle.cube.id == toio_dict[underToioNum])
             {
@@ -88,31 +120,32 @@ public class MovingOnToio : MonoBehaviour
                     nextToioNum = entry.Key;
                     angle_NextToio = entry.Value;
                 }
+                angle_NextToio = 180;
+                Debug.Log("nextToioNum: " + nextToioNum);
+                Debug.Log("angle_NextToio: " + angle_NextToio);
                 step ++;
-                Debug.Log("2");
+                Debug.Log("step.2");
             }
-            else if(step == 2 && nextToioNum != -1 && handle.cube.id == toio_dict[onToioNum])
+            else if(step == 2 && nextToioNum != targetToioNum && handle.cube.id == toio_dict[onToioNum])
             {
                 // onToioをangle_NextToioの角度に一致するように回転させる
                 if(phase_Move2NextToio == 0)
                 {
-                    handle.Rotate2Deg(angle_NextToio,40).Exec();
+                    handle.Rotate2Deg(angle_NextToio,10).Exec();
                     phase_Move2NextToio += 1;
                     Debug.Log("onToioをangle_NextToioの角度に一致するように回転させた");
                 }
                 else if(phase_Move2NextToio == 1)
                 {
-                    // onToioを相対距離30(=distance)移動させる
-                    handle.TranslateByDist(distance, 40).Exec();
+                    // onToioをnextToioへ移動させる
+                    handle.cube.Move(20,20,600);
                     phase_Move2NextToio += 1;
                     Debug.Log("onToioを相対距離30(=distance)移動させた");
                 }
                 step ++;
-                Debug.Log("3");
+                Debug.Log("step.3");
             }
         }
-
-        // 
 
         // GetUnderToio()の使い方
         // foreach(var cube in cm.syncCubes)
