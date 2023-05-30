@@ -8,33 +8,28 @@ using toio;
 
 public class Connecting : MonoBehaviour
 {
-    // public Text label;
+    public Text label;
 
     CubeManager cm;
-    public ConnectType connectType;
+    public ConnectType connectType = ConnectType.Real;
 
     int phase = 0;
+    int check = 0;
 
-    Vector2 pos_cube_left = new Vector2(0, 0);
-    Vector2 pos_pre_cube_right = new Vector2(0, 0); // one cube behind final position
-    Vector2 pos_cube_right = new Vector2(0, 0); // final position
+    Vector2 pos_slope = new Vector2(0, 0);
+    Vector2 pos_cube = new Vector2(0, 0);
+    Vector2 pos_press = new Vector2(0, 0);
 
-    int angle_left = 0;
+    int angle_slope = 0;
 
-    int L = 30; // cube's size
+    int L_cube=50, L_press=100;
 
     public int connectNum = 2;
+
     Dictionary<int, string> toio_dict = new Dictionary<int, string>();
-
-    int Cube_left=1;
-    int Cube_right=0;
-
+    
     async void Start()
     {
-        cm = new CubeManager(connectType);
-        await cm.MultiConnect(connectNum);
-        
-
         using (var sr = new StreamReader("Assets/toio_number.csv"))
         {
             while (!sr.EndOfStream)
@@ -44,64 +39,59 @@ public class Connecting : MonoBehaviour
                 toio_dict.Add(int.Parse(values[0]), values[1]);
             }
         }
+
+        cm = new CubeManager(connectType);
+        await cm.MultiConnect(connectNum);
     }
 
     void Update()
     {
-        if (cm.synced)
-        {
-            foreach (var navigator in cm.syncNavigators)
-            {
-                if (navigator.cube.id == toio_dict[Cube_left] && navigator.cube.x != 0 && navigator.cube.y != 0)
-                {
-                    pos_cube_left = new Vector2(navigator.cube.x, navigator.cube.y);
-                    angle_left = navigator.cube.angle;
-                    pos_pre_cube_right = CalculateNewPosition(pos_cube_left, angle_left + 135, L); // one cube behind final position
-                    pos_cube_right = CalculateNewPosition(pos_cube_left, angle_left + 90, L); // final position
-                    Debug.Log("pos_cube_right: " + pos_cube_right.x + ", " + pos_cube_right.y);
+        if (cm.synced){
+            foreach(var navigator in cm.syncNavigators){
+                if(check == 0){
+                    if(navigator.cube.id == toio_dict[1] && navigator.cube.x != 0 && navigator.cube.y != 0){
+                        pos_slope = new Vector2(navigator.cube.x, navigator.cube.y);
+                        angle_slope = navigator.cube.angle;
+                        check += 1;
+                        pos_cube = CalculateNewPosition(pos_slope, angle_slope, L_cube);
+                        pos_press = CalculateNewPosition(pos_slope, angle_slope, L_press);
+                        Debug.Log("pos_cube: " + pos_cube.x + ", " + pos_cube.y);
+                        Debug.Log("pos_press: " + pos_press.x + ", " + pos_press.y);
+                    }
                 }
-                else
-                {
-                    if (phase == 0)
-                    {
-                        if (navigator.cube.id == toio_dict[Cube_right])
-                        {
-                            var mv = navigator.Navi2Target(pos_pre_cube_right.x, pos_pre_cube_right.y, maxSpd: 50).Exec();
-                            if (mv.reached) phase += 1;
+                else{
+                    if(phase == 0){
+                        if(navigator.cube.id == toio_dict[2]){
+                            var mv = navigator.Navi2Target(pos_cube.x, pos_cube.y, 20, 250, 4).Exec();
+                            if(mv.reached) phase += 1;
                             Debug.Log("phase0");
                         }
                     }
-                    else if (phase == 1)
-                    {
-                        if (navigator.cube.id == toio_dict[Cube_right])
-                        {
-                            Movement mv = navigator.handle.Rotate2Deg(angle_left).Exec();
-                            if (mv.reached) phase += 1;
+                    if(phase == 1){
+                        if(navigator.cube.id == toio_dict[2]){
+                            Movement mv = navigator.handle.Rotate2Deg(angle_slope,50,3).Exec();
+                            if(mv.reached) phase += 1;
                             Debug.Log("phase1");
                         }
                     }
-                    else if (phase == 2)
-                    {
-                        if (navigator.cube.id == toio_dict[Cube_right])
-                        {
-                            // ここをcube.TargetMove()を用いて、pos_cube_rightに移動させる
-                            navigator.cube.TargetMove((int)pos_cube_right.x, (int)pos_cube_right.y, 340, angle_left, maxSpd: 50);
-                            if(navigator.cube.pos == pos_cube_right) phase += 1;
+                    if(phase == 2){
+                        if(navigator.cube.id == toio_dict[2]){
+                            navigator.handle.Move(-15, 0, 1000);
+                            phase += 1;
                             Debug.Log("phase2");
                         }
                     }
                 }
             }
 
-            // string text = "";
-            // foreach (var cube in cm.syncCubes)
-            // {
-            //     if (cube.id == toio_dict[1]) text += "Cube_left: ";
-            //     else if (cube.id == toio_dict[2]) text += "Cube_right: ";
+            string text = "";
+            foreach (var cube in cm.syncCubes){
+                if(cube.id == toio_dict[2]) text += "Cube_right: ";
+                else if(cube.id == toio_dict[1]) text += "Cube_left: ";
 
-            //     text += "(" + cube.x + "," + cube.y + "," + cube.angle + ")\n";
-            // }
-            // if (text != "") this.label.text = text;
+                text += "(" + cube.x + "," + cube.y + "," + cube.angle + ")\n";
+            }
+            if (text != "") this.label.text = text;
         }
     }
 
