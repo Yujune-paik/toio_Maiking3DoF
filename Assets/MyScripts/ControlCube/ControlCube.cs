@@ -47,9 +47,20 @@ public class ControlCube : MonoBehaviour
                 } else if (Input.GetKey(KeyCode.RightArrow)) {
                     cube.Move(20, -20, 50);
                 } else if (Input.GetKey(KeyCode.UpArrow)) {
-                    cube.Move(30, 30, 50);
+                    cube.Move(50, 50, 50);
                 } else if (Input.GetKey(KeyCode.DownArrow)) {
-                    cube.Move(-30, -30, 50);
+                    cube.Move(-50, -50, 50);
+                }
+            }
+            else if(cube.id == toio_dict[5]){
+                if (Input.GetKey(KeyCode.LeftArrow)) {
+                    cube.Move(-20, 20, 50);
+                } else if (Input.GetKey(KeyCode.RightArrow)) {
+                    cube.Move(20, -20, 50);
+                } else if (Input.GetKey(KeyCode.UpArrow)) {
+                    cube.Move(-50, -50, 50);
+                } else if (Input.GetKey(KeyCode.DownArrow)) {
+                    cube.Move(50, 50, 50);
                 }
             }
         }
