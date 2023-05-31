@@ -25,8 +25,8 @@ public class Connecting : MonoBehaviour
 
     public int connectNum = 2;
 
-    int Cube_right=1;
-    int Cube_left=0;
+    int Cube_right=6;
+    int Cube_left=7;
 
     Dictionary<int, string> toio_dict = new Dictionary<int, string>();
     
@@ -48,10 +48,14 @@ public class Connecting : MonoBehaviour
 
     void Update()
     {
-        if (cm.synced){
-            foreach(var navigator in cm.syncNavigators){
-                if(check == 0){
-                    if(navigator.cube.id == toio_dict[Cube_left] && navigator.cube.x != 0 && navigator.cube.y != 0){
+        if (cm.synced)
+        {
+            foreach(var navigator in cm.syncNavigators)
+            {
+                if(check == 0)
+                {
+                    if(navigator.cube.id == toio_dict[Cube_left] && navigator.cube.x != 0 && navigator.cube.y != 0)
+                    {
                         pos_slope = new Vector2(navigator.cube.x, navigator.cube.y);
                         angle_slope = navigator.cube.angle;
                         check += 1;
@@ -59,23 +63,36 @@ public class Connecting : MonoBehaviour
                         Debug.Log("pos_cube: " + pos_cube.x + ", " + pos_cube.y);
                     }
                 }
-                else{
-                    if(phase == 0){
-                        if(navigator.cube.id == toio_dict[Cube_right]){
-                            var mv = navigator.Navi2Target(pos_cube.x, pos_cube.y, maxSpd:20, rotateTime:1000,tolerance:10).Exec();
-                            if(mv.reached) phase += 1;
-                            Debug.Log("phase0");
+                else
+                {
+                    if(phase == 0)
+                    {
+                        if(navigator.cube.id == toio_dict[Cube_right])
+                        {
+                            var mv = navigator.Navi2Target(pos_cube.x, pos_cube.y, maxSpd:20, rotateTime:1000,tolerance:15).Exec();
+                            if(mv.reached)
+                            {
+                                phase += 1;
+                                Debug.Log("phase0");
+                            }
                         }
                     }
-                    else if(phase == 1){
-                        if(navigator.cube.id == toio_dict[Cube_right]){
-                            Movement mv = navigator.handle.Rotate2Deg(angle_slope, rotateTime:2500, tolerance:1).Exec();
-                            if(mv.reached) phase += 1;
-                            Debug.Log("phase1");
+                    else if(phase == 1)
+                    {
+                        if(navigator.cube.id == toio_dict[Cube_right])
+                        {
+                            Movement mv = navigator.handle.Rotate2Deg(angle_slope, rotateTime:2500, tolerance:0.1).Exec();
+                            if(mv.reached)
+                            {
+                                phase += 1;
+                                Debug.Log("phase1");
+                            }
                         }
                     }
-                    else if(phase == 2){
-                        if(navigator.cube.id == toio_dict[Cube_right]){
+                    else if(phase == 2)
+                    {
+                        if(navigator.cube.id == toio_dict[Cube_right])
+                        {
                             navigator.handle.Move(-15, 0, 1000);
                             phase += 1;
                             Debug.Log("phase2");
@@ -86,7 +103,8 @@ public class Connecting : MonoBehaviour
             }
 
             string text = "";
-            foreach (var cube in cm.syncCubes){
+            foreach (var cube in cm.syncCubes)
+            {
                 if(cube.id == toio_dict[2]) text += "Cube_right: ";
                 else if(cube.id == toio_dict[1]) text += "Cube_left: ";
 
