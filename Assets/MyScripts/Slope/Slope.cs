@@ -31,7 +31,7 @@ public class Slope : MonoBehaviour
 
     int num_cube = 1;
     int num_slope = 0;
-    int num_press = 2;
+    int num_press = 6;
 
     async void Start()
     {
