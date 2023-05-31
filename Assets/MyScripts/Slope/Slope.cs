@@ -135,11 +135,11 @@ public class Slope : MonoBehaviour
                     {
                         if (navigator.cube.id == toio_dict[num_cube])
                         {
-                            navigator.handle.Move(-50, 0, 100)
+                            navigator.handle.Move(-50, 0, 100);
                         }
                         if (navigator.cube.id == toio_dict[num_press])
                         {
-                            navigator.cube.Move(-50, 0, 100);
+                            navigator.handle.Move(-50, 0, 100);
                         }
                     } 
                 }
