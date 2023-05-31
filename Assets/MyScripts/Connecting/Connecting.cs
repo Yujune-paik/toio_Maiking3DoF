@@ -21,7 +21,7 @@ public class Connecting : MonoBehaviour
 
     int angle_slope = 0;
 
-    int L_cube=40;
+    int L_cube=50;
 
     public int connectNum = 2;
 
