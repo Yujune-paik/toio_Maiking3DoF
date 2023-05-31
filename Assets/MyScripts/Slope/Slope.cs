@@ -33,6 +33,11 @@ public class Slope : MonoBehaviour
     int num_slope = 0;
     int num_press = 6;
 
+    bool OnSlope_flag = false;
+
+    // Slopeの登り切った平らなところの座標
+    Vector2 pos_flat = new Vector2(0, 0);
+
     async void Start()
     {
 
@@ -49,6 +54,12 @@ public class Slope : MonoBehaviour
         cm = new CubeManager(connectType);
         // キューブの複数台接続
         await ConnectToioCubes();
+
+        // コールバックの登録
+        foreach(var cube in cm.syncCubes)
+        {
+            cube.slopeCallback.AddListener("EventScene", OnSlope);
+        }
     }
 
     async Task ConnectToioCubes()
@@ -95,53 +106,74 @@ public class Slope : MonoBehaviour
                             }
                         }
                     }
-                    if (phase == 1)
+                    // if (phase == 1)
+                    // {
+                    //     if (navigator.cube.id == toio_dict[num_press])
+                    //     {
+                    //         var mv = navigator.Navi2Target(pos_press.x, pos_press.y, maxSpd: 20, rotateTime:1000, tolerance: 10).Exec();
+                    //         if (mv.reached)
+                    //         {
+                    //             phase += 1;
+                    //             Debug.Log("phase1");
+                    //         }
+                    //     }
+                    // }
+                    // else if (phase == 2)
+                    // {
+                    //     if (navigator.cube.id == toio_dict[num_cube])
+                    //     {
+                    //         Movement mv = navigator.handle.Rotate2Deg(angle_slope+90, rotateTime:2500, tolerance:0.1).Exec();
+                    //         if (mv.reached)
+                    //         {
+                    //             phase += 1;
+                    //             Debug.Log("phase2");
+                    //         }
+                    //     }
+                    // }
+                    // else if (phase == 3)
+                    // {
+                    //     if (navigator.cube.id == toio_dict[num_press])
+                    //     {
+                    //         Movement mv = navigator.handle.Rotate2Deg(angle_slope+90, rotateTime:2500, tolerance:0.1).Exec();
+                    //         if (mv.reached)
+                    //         {
+                    //             phase += 1;
+                    //             Debug.Log("phase3");
+                    //         }
+                    //     }
+                    // }
+                    else if (phase == 1)
                     {
+                        if (navigator.cube.id == toio_dict[num_cube])
+                        {
+                            navigator.handle.Move(-30, 0, 100);
+                        }
                         if (navigator.cube.id == toio_dict[num_press])
                         {
-                            var mv = navigator.Navi2Target(pos_press.x, pos_press.y, maxSpd: 20, rotateTime:1000, tolerance: 10).Exec();
-                            if (mv.reached)
-                            {
-                                phase += 1;
-                                Debug.Log("phase1");
-                            }
+                            navigator.handle.Move(-30, 0, 100);
                         }
-                    }
+
+                        if(OnSlope_flag)
+                        {
+                            phase += 1;
+                            Debug.Log("phase1");
+                        }
+                    } 
                     else if (phase == 2)
                     {
                         if (navigator.cube.id == toio_dict[num_cube])
                         {
-                            Movement mv = navigator.handle.Rotate2Deg(angle_slope+90, rotateTime:2500, tolerance:0.1).Exec();
-                            if (mv.reached)
+                            //角度270度を維持しながらpos_flat付近に到着するまでMove(-10, 0, 10)とRotate2Deg(270, rotateTime: 1000, tolerance: 0.1)を繰り返す
+                            while (navigator.cube.x < pos_flat.x - 10 || navigator.cube.x > pos_flat.x + 10 || navigator.cube.y < pos_flat.y - 10 || navigator.cube.y > pos_flat.y + 10)
                             {
-                                phase += 1;
-                                Debug.Log("phase2");
+                                navigator.handle.Move(-10, 0, 10);
+                                var mv0 = navigator.handle.Rotate2Deg(270, rotateTime: 1000, tolerance: 0.1).Exec();
                             }
                         }
+
+                        phase += 1;
+                        Debug.Log("phase2");
                     }
-                    else if (phase == 3)
-                    {
-                        if (navigator.cube.id == toio_dict[num_press])
-                        {
-                            Movement mv = navigator.handle.Rotate2Deg(angle_slope+90, rotateTime:2500, tolerance:0.1).Exec();
-                            if (mv.reached)
-                            {
-                                phase += 1;
-                                Debug.Log("phase3");
-                            }
-                        }
-                    }
-                    else if (phase == 4)
-                    {
-                        if (navigator.cube.id == toio_dict[num_cube])
-                        {
-                            navigator.handle.Move(-50, 0, 100);
-                        }
-                        if (navigator.cube.id == toio_dict[num_press])
-                        {
-                            navigator.handle.Move(-50, 0, 100);
-                        }
-                    } 
                 }
             }
 
@@ -166,5 +198,10 @@ public class Slope : MonoBehaviour
         float y = pos.y + distance * Mathf.Sin(angleRadians);
 
         return new Vector2((int)x, (int)y);
+    }
+
+    private void OnSlope(Cube cube)
+    {
+        OnSlope_flag = true;
     }
 }
