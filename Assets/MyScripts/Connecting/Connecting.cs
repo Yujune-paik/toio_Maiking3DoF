@@ -69,7 +69,7 @@ public class Connecting : MonoBehaviour
                     }
                     else if(phase == 1){
                         if(navigator.cube.id == toio_dict[Cube_right]){
-                            Movement mv = navigator.handle.Rotate2Deg(angle_slope, rotateTime:2500, tolerance:0.05).Exec();
+                            Movement mv = navigator.handle.Rotate2Deg(angle_slope, rotateTime:2500, tolerance:1).Exec();
                             if(mv.reached) phase += 1;
                             Debug.Log("phase1");
                         }
