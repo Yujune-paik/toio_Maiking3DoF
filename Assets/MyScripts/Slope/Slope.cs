@@ -14,7 +14,7 @@ public class Slope : MonoBehaviour
     CubeManager cm;
     public ConnectType connectType = ConnectType.Real;
 
-    int phase = 0;
+    int phase = 1;
     int check = 0;
 
     Vector2 pos_slope = new Vector2(0, 0);
@@ -29,8 +29,8 @@ public class Slope : MonoBehaviour
 
     Dictionary<int, string> toio_dict = new Dictionary<int, string>();
 
-    int num_cube = 1;
-    int num_slope = 0;
+    int num_cube = 7;
+    int num_slope = 3;
     int num_press = 6;
 
     bool OnSlope_flag = false;
@@ -94,18 +94,18 @@ public class Slope : MonoBehaviour
                 }
                 else
                 {
-                    if (phase == 0)
-                    {
-                        if (navigator.cube.id == toio_dict[num_cube])
-                        {
-                            var mv = navigator.Navi2Target(pos_cube.x, pos_cube.y, maxSpd: 50,tolerance: 10).Exec();
-                            if (mv.reached)
-                            {
-                                phase += 1;
-                                Debug.Log("phase0");
-                            }
-                        }
-                    }
+                    // if (phase == 0)
+                    // {
+                    //     if (navigator.cube.id == toio_dict[num_cube])
+                    //     {
+                    //         var mv = navigator.Navi2Target(pos_cube.x, pos_cube.y, maxSpd: 50,tolerance: 10).Exec();
+                    //         if (mv.reached)
+                    //         {
+                    //             phase += 1;
+                    //             Debug.Log("phase0");
+                    //         }
+                    //     }
+                    // }
                     // if (phase == 1)
                     // {
                     //     if (navigator.cube.id == toio_dict[num_press])
@@ -142,15 +142,15 @@ public class Slope : MonoBehaviour
                     //         }
                     //     }
                     // }
-                    else if (phase == 1)
+                    if (phase == 1)
                     {
                         if (navigator.cube.id == toio_dict[num_cube])
                         {
-                            navigator.handle.Move(-30, 0, 100);
+                            navigator.handle.Move(-50, 0, 100);
                         }
                         if (navigator.cube.id == toio_dict[num_press])
                         {
-                            navigator.handle.Move(-30, 0, 100);
+                            navigator.handle.Move(-50, 0, 100);
                         }
 
                         if(OnSlope_flag)

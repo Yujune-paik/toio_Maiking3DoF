@@ -25,8 +25,8 @@ public class Connecting : MonoBehaviour
 
     public int connectNum = 2;
 
-    int Cube_right=6;
-    int Cube_left=7;
+    int Cube_right=1;
+    int Cube_left=0;
 
     Dictionary<int, string> toio_dict = new Dictionary<int, string>();
     
