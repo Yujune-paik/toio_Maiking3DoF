@@ -6,9 +6,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using toio;
 
-// ****************************
-// toio 1台のセンサーの値を取得するプログラム
-// ****************************
+// *************************************************
+// toio 1台のセンサーの値を取得するプログラム（実機 ver）
+// *************************************************
 
 public class Sensor : MonoBehaviour
 {
@@ -21,6 +21,7 @@ public class Sensor : MonoBehaviour
     {
         cm = new CubeManager(connectType);
         cube = await cm.SingleConnect();
+        cube.ConfigSlopeThreshold(30);
 
         // コールバックの登録
         if (cube != null)

@@ -16,6 +16,9 @@ public class ControlCubeSimulator : MonoBehaviour
     // キューブ複数台接続
     public int connectNum = 8; // 接続数
 
+    // 停止する座標(187,45)
+    Vector2 stopPos = new Vector2(187,45);
+
     async void Start()
     {
         // キューブの複数台接続
@@ -26,22 +29,34 @@ public class ControlCubeSimulator : MonoBehaviour
     // フレーム毎に呼ばれる
     void Update()
     {
+        // foreach (var cube in cubeManager.syncCubes)
+        // {   
+        //     // "CubeX"のX値を変えれば、
+        //     // 接続しているCubeごとに処理を分けられる
+        //     if(cube.localName == "Cube0"){
+        //         if (Input.GetKey(KeyCode.LeftArrow)) {
+        //             cube.Move(-20, 20, 50);
+        //         } else if (Input.GetKey(KeyCode.RightArrow)) {
+        //             cube.Move(20, -20, 50);
+        //         } else if (Input.GetKey(KeyCode.UpArrow)) {
+        //             cube.Move(50, 50, 50);
+        //         } else if (Input.GetKey(KeyCode.DownArrow)) {
+        //             cube.Move(-50, -50, 50);
+        //         }
+        //     }
+        // }
+
+        // stopPos付近(誤差 5)に到達するまでcube.Move(50,50,50)
         foreach (var cube in cubeManager.syncCubes)
-        {   
-            // "CubeX"のX値を変えれば、
-            // 接続しているCubeごとに処理を分けられる
+        {
             if(cube.localName == "Cube0"){
-                if (Input.GetKey(KeyCode.LeftArrow)) {
-                    cube.Move(-20, 20, 50);
-                } else if (Input.GetKey(KeyCode.RightArrow)) {
-                    cube.Move(20, -20, 50);
-                } else if (Input.GetKey(KeyCode.UpArrow)) {
-                    cube.Move(50, 50, 50);
-                } else if (Input.GetKey(KeyCode.DownArrow)) {
-                    cube.Move(-50, -50, 50);
+                if (cube.x < stopPos.x - 10 || cube.x > stopPos.x + 10 || cube.y < stopPos.y - 10 || cube.y > stopPos.y + 10) {
+                    cube.Move(50, 50, 10);
                 }
             }
         }
+
+
 
         // キューブのXY座標表示
         string text = "";
