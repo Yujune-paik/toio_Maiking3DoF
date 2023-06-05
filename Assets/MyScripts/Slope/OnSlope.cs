@@ -14,24 +14,19 @@ public class OnSlope : MonoBehaviour
     CubeManager cm;
     public ConnectType connectType = ConnectType.Real;
 
-    int phase = 2;
-    int check = 1;
+    int phase = 0;
 
     Vector2 pos_slope = new Vector2(0, 0);
     Vector2 pos_cube = new Vector2(0, 0);
     Vector2 pos_press = new Vector2(0, 0);
 
-    int angle_slope = 0;
-
-    int L_cube = 70, L_press = 130;
-
     int connectNum = 2;
 
     Dictionary<int, string> toio_dict = new Dictionary<int, string>();
 
-    int num_cube = 0;
+    int num_cube = 1;
     int num_slope = 1;
-    int num_press = 2;
+    int num_press = 3;
 
     bool OnSlope_flag = false;
 
@@ -54,13 +49,6 @@ public class OnSlope : MonoBehaviour
         cm = new CubeManager(connectType);
         // キューブの複数台接続
         await ConnectToioCubes();
-
-        // コールバックの登録
-        foreach(var cube in cm.syncCubes)
-        {
-            cube.ConfigSlopeThreshold(30);
-            cube.slopeCallback.AddListener("EventScene", OnSlopeDetector);
-        }
     }
 
     async Task ConnectToioCubes()
@@ -80,115 +68,53 @@ public class OnSlope : MonoBehaviour
         {
             foreach (var navigator in cm.syncNavigators)
             {
-                if (check == 0)
-                {
-                    // if (navigator.cube.id == toio_dict[num_slope] && navigator.cube.x != 0 && navigator.cube.y != 0)
-                    // {
-                    //     pos_slope = new Vector2(navigator.cube.x, navigator.cube.y);
-                    //     angle_slope = navigator.cube.angle;
-                    //     check += 1;
-                    //     pos_cube = CalculateNewPosition(pos_slope, angle_slope, L_cube);
-                    //     pos_press = CalculateNewPosition(pos_slope, angle_slope, L_press);
-                    //     Debug.Log("pos_cube: " + pos_cube.x + ", " + pos_cube.y);
-                    //     Debug.Log("pos_press: " + pos_press.x + ", " + pos_press.y);
-                    // }
-                }
-                else
-                {
-                    // if (phase == 0)
-                    // {
-                    //     if (navigator.cube.id == toio_dict[num_cube])
-                    //     {
-                    //         var mv = navigator.Navi2Target(pos_cube.x, pos_cube.y, maxSpd: 50,tolerance: 10).Exec();
-                    //         if (mv.reached)
-                    //         {
-                    //             phase += 1;
-                    //             Debug.Log("phase0");
-                    //         }
-                    //     }
-                    // }
-                    // if (phase == 1)
-                    // {
-                    //     if (navigator.cube.id == toio_dict[num_press])
-                    //     {
-                    //         var mv = navigator.Navi2Target(pos_press.x, pos_press.y, maxSpd: 20, rotateTime:1000, tolerance: 10).Exec();
-                    //         if (mv.reached)
-                    //         {
-                    //             phase += 1;
-                    //             Debug.Log("phase1");
-                    //         }
-                    //     }
-                    // }
-                    // else if (phase == 2)
-                    // {
-                    //     if (navigator.cube.id == toio_dict[num_cube])
-                    //     {
-                    //         Movement mv = navigator.handle.Rotate2Deg(angle_slope, rotateTime:2500, tolerance:0.1).Exec();
-                    //         if (mv.reached)
-                    //         {
-                    //             phase += 1;
-                    //             Debug.Log("phase2");
-                    //         }
-                    //     }
-                    // }
-                    // else if (phase == 3)
-                    // {
-                    //     if (navigator.cube.id == toio_dict[num_press])
-                    //     {
-                    //         Movement mv = navigator.handle.Rotate2Deg(angle_slope, rotateTime:2500, tolerance:0.1).Exec();
-                    //         if (mv.reached)
-                    //         {
-                    //             phase += 1;
-                    //             Debug.Log("phase3");
-                    //         }
-                    //     }
-                    // }
-                    if (phase == 1)
-                    {
-                        if (navigator.cube.id == toio_dict[num_cube])
-                        {
-                            navigator.handle.Move(-50, 0, 100);
-                        }
-                        if (navigator.cube.id == toio_dict[num_press])
-                        {
-                            navigator.handle.Move(-50, 0, 100);
-                        }
+                navigator.handle.Move(-50,0,100);
+                // if (phase == 0)
+                // {
+                //     if (navigator.cube.id == toio_dict[num_cube])
+                //     {
+                //         navigator.handle.Move(-50, 0, 100);
+                //     }
+                //     if (navigator.cube.id == toio_dict[num_press])
+                //     {
+                //         navigator.handle.Move(-50, 0, 100);
+                //     }
 
-                        if(OnSlope_flag)
-                        {
-                            phase += 1;
-                            Debug.Log("phase1");
-                        }
-                    } 
-                    else if (phase == 2)
-                    {
-                        if (navigator.cube.id == toio_dict[num_cube])
-                        {
-                            //角度270度を維持しながらpos_flat付近に到着するまでMove(-10, 0, 10)とRotate2Deg(270, rotateTime: 1000, tolerance: 0.1)を繰り返す
-                            while (navigator.cube.x < pos_flat.x - 5 || navigator.cube.x > pos_flat.x + 5 || navigator.cube.y < pos_flat.y - 5 || navigator.cube.y > pos_flat.y + 5)
-                            {
-                                navigator.handle.Move(-50, 0, 10);
-                            }
-                        }
+                //     if(OnSlope_flag)
+                //     {
+                //         phase += 1;
+                //         Debug.Log("phase0");
+                //     }
+                // } 
+                // else if (phase == 1)
+                // {
+                //     if (navigator.cube.id == toio_dict[num_cube])
+                //     {
+                //         //角度270度を維持しながらpos_flat付近に到着するまでMove(-10, 0, 10)とRotate2Deg(270, rotateTime: 1000, tolerance: 0.1)を繰り返す
+                //         while (navigator.cube.x < pos_flat.x - 10 || navigator.cube.x > pos_flat.x + 10 || navigator.cube.y < pos_flat.y - 10 || navigator.cube.y > pos_flat.y + 10)
+                //         {
+                //             navigator.handle.Move(-30, 0, 10);
+                //         }
+                //     }
 
-                        phase += 1;
-                        Debug.Log("phase2");
-                    }
-                }
+                //     phase += 1;
+                //     Debug.Log("phase1");
+                // }
             }
-
-            string text = "";
-           
-            foreach (var cube in cm.syncCubes)
-            {
-                if (cube.id == toio_dict[num_cube]) text += "Cube" + num_cube + ": ";
-                else if (cube.id == toio_dict[num_press]) text += "Cube" + num_press + ": ";
-                else if (cube.id == toio_dict[num_slope]) text += "Cube" + num_slope + ": ";
-
-                text += "(" + cube.x + "," + cube.y + "," + cube.angle + ")\n";
-            }
-            if (text != "") this.label.text = text;
         }
+
+        string text = "";
+           
+        foreach (var cube in cm.syncCubes)
+        {
+            if (cube.id == toio_dict[num_cube]) text += "Cube" + num_cube + ": ";
+            else if (cube.id == toio_dict[num_press]) text += "Cube" + num_press + ": ";
+            else if (cube.id == toio_dict[num_slope]) text += "Cube" + num_slope + ": ";
+
+            text += "(" + cube.x + "," + cube.y + "," + cube.angle + ")\n";
+        }
+        if (text != "") this.label.text = text;
+        
     }
 
     Vector2 CalculateNewPosition(Vector2 pos, int angle, int distance)
