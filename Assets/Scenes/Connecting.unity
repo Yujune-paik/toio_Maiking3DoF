@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311918, g: 0.3807398, b: 0.35872716, a: 1}
+  m_IndirectSpecularColor: {r: 0.3731193, g: 0.38073996, b: 0.35872698, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -437,7 +437,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 10, y: -10}
-  m_SizeDelta: {x: 160, y: 30}
+  m_SizeDelta: {x: 500, y: 400}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1357394610
 MonoBehaviour:
@@ -488,6 +488,38 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 749879195433089394, guid: cdb3cb207738d3b45ade7abf174b8f7a, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 1bf49ba9f1bab56a4b0ea024f0a1cf9a, type: 2}
+    - target: {fileID: 3944386808245820251, guid: cdb3cb207738d3b45ade7abf174b8f7a, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.41557178
+      objectReference: {fileID: 0}
+    - target: {fileID: 3944386808245820251, guid: cdb3cb207738d3b45ade7abf174b8f7a, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.29566908
+      objectReference: {fileID: 0}
+    - target: {fileID: 6661331789706933332, guid: cdb3cb207738d3b45ade7abf174b8f7a, type: 3}
+      propertyPath: xMax
+      value: 402
+      objectReference: {fileID: 0}
+    - target: {fileID: 6661331789706933332, guid: cdb3cb207738d3b45ade7abf174b8f7a, type: 3}
+      propertyPath: xMin
+      value: 98
+      objectReference: {fileID: 0}
+    - target: {fileID: 6661331789706933332, guid: cdb3cb207738d3b45ade7abf174b8f7a, type: 3}
+      propertyPath: yMax
+      value: 358
+      objectReference: {fileID: 0}
+    - target: {fileID: 6661331789706933332, guid: cdb3cb207738d3b45ade7abf174b8f7a, type: 3}
+      propertyPath: yMin
+      value: 142
+      objectReference: {fileID: 0}
+    - target: {fileID: 6661331789706933332, guid: cdb3cb207738d3b45ade7abf174b8f7a, type: 3}
+      propertyPath: matType
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8138842908862602432, guid: cdb3cb207738d3b45ade7abf174b8f7a, type: 3}
       propertyPath: m_RootOrder
       value: 2

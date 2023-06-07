@@ -290,35 +290,35 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3944386808245820251, guid: cdb3cb207738d3b45ade7abf174b8f7a, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.4169343
+      value: 0.41557178
       objectReference: {fileID: 0}
     - target: {fileID: 3944386808245820251, guid: cdb3cb207738d3b45ade7abf174b8f7a, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.29430658
+      value: 0.29566908
       objectReference: {fileID: 0}
     - target: {fileID: 6661331789706933332, guid: cdb3cb207738d3b45ade7abf174b8f7a, type: 3}
       propertyPath: xMax
-      value: 339
+      value: 402
       objectReference: {fileID: 0}
     - target: {fileID: 6661331789706933332, guid: cdb3cb207738d3b45ade7abf174b8f7a, type: 3}
       propertyPath: xMin
-      value: 34
+      value: 98
       objectReference: {fileID: 0}
     - target: {fileID: 6661331789706933332, guid: cdb3cb207738d3b45ade7abf174b8f7a, type: 3}
       propertyPath: yMax
-      value: 250
+      value: 358
       objectReference: {fileID: 0}
     - target: {fileID: 6661331789706933332, guid: cdb3cb207738d3b45ade7abf174b8f7a, type: 3}
       propertyPath: yMin
-      value: 35
+      value: 142
       objectReference: {fileID: 0}
     - target: {fileID: 6661331789706933332, guid: cdb3cb207738d3b45ade7abf174b8f7a, type: 3}
       propertyPath: matType
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6661331789706933332, guid: cdb3cb207738d3b45ade7abf174b8f7a, type: 3}
       propertyPath: developerMatType
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8138842908862602432, guid: cdb3cb207738d3b45ade7abf174b8f7a, type: 3}
       propertyPath: m_RootOrder
