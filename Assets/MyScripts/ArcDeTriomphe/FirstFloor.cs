@@ -7,6 +7,9 @@ using UnityEngine.UI;
 using toio;
 using System.Threading.Tasks;
 
+// 1層目を作るプログラム
+// 接続するtoio： 0, 1, 2, 3
+
 public class FirstFloor : MonoBehaviour
 {
     public Text label;
@@ -26,20 +29,29 @@ public class FirstFloor : MonoBehaviour
 
     public int connectNum = 4;
 
-    int Cube_right=2; // くっつきに行くほう
-    int Cube_left=0; // くっつかれるほう
+    // 0と1がくっつく
+    int FirstConnectionLeft = 0; // くっつかれるほう
+    int FirstConnectionRight = 1; // くっつきに行くほう
 
-    Dictionary<int, string> toio_dict = new Dictionary<int, string>();
+    // // 1と2がくっつく
+    int SecondConnectionLeft = 1; // くっつかれるほう
+    int SecondConnectionRight = 2; // くっつきに行くほう
+
+    // CSVファイルの読み込み
+    Dictionary<int, string> toio_dict = new Dictionary<int, string>(); // Cubeの番号とIDの対応付け
+    Dictionary<int, Vector2> toio_pos = new Dictionary<int, Vector2>(); // Cubeの番号と座標の対応付け
     
     async void Start()
     {
+        // Cubeの番号とIDの対応付け, Cubeの番号と座標の対応付け
         using (var sr = new StreamReader("Assets/toio_number.csv"))
         {
             while (!sr.EndOfStream)
             {
                 var line = sr.ReadLine();
                 var values = line.Split(',');
-                toio_dict.Add(int.Parse(values[0]), values[1]);
+                toio_dict.Add(int.Parse(values[0]), values[1]); // Cubeの番号とIDの対応付け
+                toio_pos.Add(int.Parse(values[0]), new Vector2(int.Parse(values[2]), int.Parse(values[3]))); // Cubeの番号と座標の対応付け
             }
         }
 
@@ -66,12 +78,12 @@ public class FirstFloor : MonoBehaviour
             {
                 if(check == 0)
                 {
-                    if(navigator.cube.id == toio_dict[Cube_left] && navigator.cube.x != 0 && navigator.cube.y != 0)
+                    if(navigator.cube.id == toio_dict[FirstConnectionLeft] && navigator.cube.x != 0 && navigator.cube.y != 0)
                     {
                         pos_slope = new Vector2(navigator.cube.x, navigator.cube.y);
                         angle_slope = navigator.cube.angle;
                         check += 1;
-                        pos_cube = CalculateNewPosition(pos_slope, angle_slope, L_cube);
+                        pos_cube = CalculateNewPosition(pos_slope, angle_slope, L_cube+10);
                         Debug.Log("pos_cube: " + pos_cube.x + ", " + pos_cube.y);
                     }
                 }
@@ -79,7 +91,7 @@ public class FirstFloor : MonoBehaviour
                 {
                     if(phase == 0)
                     {
-                        if(navigator.cube.id == toio_dict[Cube_right])
+                        if(navigator.cube.id == toio_dict[FirstConnectionRight])
                         {
                             var mv = navigator.Navi2Target(pos_cube.x, pos_cube.y, maxSpd:20, rotateTime:1000,tolerance:15).Exec();
                             if(mv.reached)
@@ -91,7 +103,7 @@ public class FirstFloor : MonoBehaviour
                     }
                     else if(phase == 1)
                     {
-                        if(navigator.cube.id == toio_dict[Cube_right])
+                        if(navigator.cube.id == toio_dict[FirstConnectionRight])
                         {
                             // toio_dict[0](構成要素)とtoio_dict[1](足場)をくっつける
                             Movement mv = navigator.handle.Rotate2Deg(angle_slope+90, rotateTime:2500, tolerance:0.1).Exec();
@@ -108,7 +120,7 @@ public class FirstFloor : MonoBehaviour
                     }
                     else if(phase == 2)
                     {
-                        if(navigator.cube.id == toio_dict[Cube_right])
+                        if(navigator.cube.id == toio_dict[FirstConnectionRight])
                         {
                             navigator.handle.Move(-15, 0, 1000);
                             phase += 1;
@@ -116,12 +128,13 @@ public class FirstFloor : MonoBehaviour
                         }
                         // Debug.Log("phase2 : Cube_Angle: " + navigator.cube.angle);
                     }
+                    
 
                     // 矢印キー(上)を押されたら3秒前進する
-                    // Cube_left = 1とき
+                    // FirstConnectionLeft = 1とき
                     if (Input.GetKey(KeyCode.UpArrow))
                     {
-                        if(navigator.cube.id == toio_dict[Cube_left])
+                        if(navigator.cube.id == toio_dict[FirstConnectionRight])
                         {
                             navigator.handle.Move(50, 0, 1500);
                         }
@@ -132,12 +145,8 @@ public class FirstFloor : MonoBehaviour
             string text = "";
             foreach (var cube in cm.syncCubes)
             {
-                if(cube.id == toio_dict[0]) text += "toio_dict[0]:";
-                else if(cube.id == toio_dict[1]) text += "toio_dict[1]:";
-                else if(cube.id == toio_dict[2]) text += "toio_dict[2]:";
-                else if(cube.id == toio_dict[3]) text += "toio_dict[3]:";
-
-                text += "(" + cube.x + "," + cube.y + "," + cube.angle + ")\n";
+                if(cube.id == toio_dict[0]) text += "toio_dict[0]：(" + cube.x + "," + cube.y + "," + cube.angle + ")\n";
+                else if(cube.id == toio_dict[1]) text += "toio_dict[1]：(" + cube.x + "," + cube.y + "," + cube.angle + ")\n";
             }
             if (text != "") this.label.text = text;
         }

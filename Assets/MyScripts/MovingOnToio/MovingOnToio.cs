@@ -32,9 +32,6 @@ public class MovingOnToio : MonoBehaviour
     // onToioを移動させたいtoioの番号
     int targetToioNum = 1;
 
-    // toioの移動距離
-    int distance = 30;
-
     // onToioがnextToioへ移動する角度
     int angle_NextToio = 0;
 
@@ -72,7 +69,6 @@ public class MovingOnToio : MonoBehaviour
 
     async Task ConnectToioCubes()
     {
-        int count = 0;
         while (cm.syncCubes.Count < connectingCubeNum)
         {
             await cm.MultiConnect(connectingCubeNum);
@@ -82,10 +78,8 @@ public class MovingOnToio : MonoBehaviour
         Debug.Log("ConnectToioCubes():" + cm.syncCubes.Count + "台接続しました");
     }
 
-    int f=0;
-
     void Update()
-    {   
+    {
         // labelの初期化
         string labelText = "";
 
