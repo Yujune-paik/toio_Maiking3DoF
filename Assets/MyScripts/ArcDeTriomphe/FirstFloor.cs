@@ -83,7 +83,7 @@ public class FirstFloor : MonoBehaviour
                         pos_slope = new Vector2(navigator.cube.x, navigator.cube.y);
                         angle_slope = navigator.cube.angle;
                         check += 1;
-                        pos_cube = CalculateNewPosition(pos_slope, angle_slope, L_cube+10);
+                        pos_cube = CalculateNewPosition(pos_slope, angle_slope, L_cube);
                         Debug.Log("pos_cube: " + pos_cube.x + ", " + pos_cube.y);
                     }
                 }
