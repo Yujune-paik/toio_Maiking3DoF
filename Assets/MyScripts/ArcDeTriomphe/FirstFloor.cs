@@ -25,7 +25,7 @@ public class FirstFloor : MonoBehaviour
 
     int AngleCubeLeft = 0;
 
-    int L_cube=30;
+    int L_cube=50;
 
     public int connectNum = 4;
 
@@ -106,7 +106,7 @@ public class FirstFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[FirstConnectionRight])
                         {
                             // toio_dict[0](構成要素)とtoio_dict[1](足場)をくっつける
-                            Movement mv = navigator.handle.Rotate2Deg(AngleCubeLeft+90, rotateTime:2500, tolerance:0.1).Exec();
+                            Movement mv = navigator.handle.Rotate2Deg(AngleCubeLeft, rotateTime:2500, tolerance:0.1).Exec();
                             
                             // toio_dict[1](足場)とtoio_dict[2](構成要素)をくっつける
                             // Movement mv = navigator.handle.Rotate2Deg(AngleCubeLeft+270, rotateTime:2500, tolerance:0.1).Exec();
@@ -122,12 +122,22 @@ public class FirstFloor : MonoBehaviour
                     {
                         if(navigator.cube.id == toio_dict[FirstConnectionRight])
                         {
-                            navigator.handle.Move(-15, 0, 1000);
+                            navigator.handle.Move(-15, 0, 700);
                             phase += 1;
                             Debug.Log("phase2");
                         }
                         // Debug.Log("phase2 : Cube_Angle: " + navigator.cube.angle);
                     }
+                    // else if(phase == 3)
+                    // {
+                    //     if(navigator.cube.id == toio_dict[FirstConnectionRight])
+                    //     {
+                    //         // toio_dict[0](構成要素)とtoio_dict[1](足場)をくっつける
+                    //         Movement mv = navigator.handle.Rotate2Deg(AngleCubeLeft+90, rotateTime:2500, tolerance:0.1).Exec();
+                    //         phase += 1;
+                    //         Debug.Log("phase3");
+                    //     }
+                    // }
                     
 
                     // 矢印キー(上)を押されたら3秒前進する
