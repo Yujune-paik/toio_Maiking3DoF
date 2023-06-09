@@ -25,7 +25,7 @@ public class Stripping : MonoBehaviour
 
     int L = 50;
 
-    int connectNum = 4;
+    int connectNum = 3;
     
     Dictionary<int, string> toio_dict = new Dictionary<int, string>();
 

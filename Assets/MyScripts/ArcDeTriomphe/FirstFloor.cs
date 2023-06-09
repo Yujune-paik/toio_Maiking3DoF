@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using toio;
 using System.Threading.Tasks;
 
-public class Connecting : MonoBehaviour
+public class FirstFloor : MonoBehaviour
 {
     public Text label;
 
@@ -22,9 +22,9 @@ public class Connecting : MonoBehaviour
 
     int angle_slope = 0;
 
-    int L_cube=50;
+    int L_cube=60;
 
-    public int connectNum = 2;
+    public int connectNum = 4;
 
     int Cube_right=2; // くっつきに行くほう
     int Cube_left=0; // くっつかれるほう
@@ -93,7 +93,12 @@ public class Connecting : MonoBehaviour
                     {
                         if(navigator.cube.id == toio_dict[Cube_right])
                         {
-                            Movement mv = navigator.handle.Rotate2Deg(angle_slope, rotateTime:2500, tolerance:0.1).Exec();
+                            // toio_dict[0](構成要素)とtoio_dict[1](足場)をくっつける
+                            Movement mv = navigator.handle.Rotate2Deg(angle_slope+90, rotateTime:2500, tolerance:0.1).Exec();
+                            
+                            // toio_dict[1](足場)とtoio_dict[2](構成要素)をくっつける
+                            // Movement mv = navigator.handle.Rotate2Deg(angle_slope+270, rotateTime:2500, tolerance:0.1).Exec();
+
                             if(mv.reached)
                             {
                                 phase += 1;
@@ -111,14 +116,26 @@ public class Connecting : MonoBehaviour
                         }
                         // Debug.Log("phase2 : Cube_Angle: " + navigator.cube.angle);
                     }
+
+                    // 矢印キー(上)を押されたら3秒前進する
+                    // Cube_left = 1とき
+                    if (Input.GetKey(KeyCode.UpArrow))
+                    {
+                        if(navigator.cube.id == toio_dict[Cube_left])
+                        {
+                            navigator.handle.Move(50, 0, 1500);
+                        }
+                    }
                 }
             }
 
             string text = "";
             foreach (var cube in cm.syncCubes)
             {
-                if(cube.id == toio_dict[2]) text += "Cube_right: ";
-                else if(cube.id == toio_dict[1]) text += "Cube_left: ";
+                if(cube.id == toio_dict[0]) text += "toio_dict[0]:";
+                else if(cube.id == toio_dict[1]) text += "toio_dict[1]:";
+                else if(cube.id == toio_dict[2]) text += "toio_dict[2]:";
+                else if(cube.id == toio_dict[3]) text += "toio_dict[3]:";
 
                 text += "(" + cube.x + "," + cube.y + "," + cube.angle + ")\n";
             }

@@ -25,7 +25,7 @@ public class Slope : MonoBehaviour
 
     int L_cube = 70, L_press = 130;
 
-    public int connectNum = 3;
+    public int connectNum = 8;
 
     Dictionary<int, string> toio_dict = new Dictionary<int, string>();
 

@@ -16,11 +16,11 @@ public class OnSlope : MonoBehaviour
 
     int phase = 0;
 
-    int connectNum = 2;
+    int connectNum = 8;
 
     Dictionary<int, string> toio_dict = new Dictionary<int, string>();
 
-    int num_cube = 1;
+    int num_cube = 0;
     int num_press = 2;
 
     bool isCoroutineRunning = false;
@@ -71,7 +71,7 @@ public class OnSlope : MonoBehaviour
                     
                     if (!isCoroutineRunning)
                     {
-                        StartCoroutine(WaitAndIncrementPhase(1.5f));
+                        StartCoroutine(WaitAndIncrementPhase(2.5f));
                     }
                 } 
                 else if (phase == 1)
@@ -95,6 +95,13 @@ public class OnSlope : MonoBehaviour
                     else if(navigator.cube.id == toio_dict[num_press])
                     {
                         navigator.handle.Move(20,0,1000);
+                    }
+                }
+                else if (phase == 2)
+                {
+                    if (navigator.cube.id == toio_dict[num_press])
+                    {
+                        navigator.handle.Move(50, 0, 1000);
                     }
                 }
             }

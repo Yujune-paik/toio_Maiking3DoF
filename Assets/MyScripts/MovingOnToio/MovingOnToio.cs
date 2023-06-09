@@ -18,7 +18,7 @@ public class MovingOnToio : MonoBehaviour
     CubeManager cm;
 
     // Cubeの接続台数
-    int connectingCubeNum = 3;
+    int connectingCubeNum = 8;
 
     // 上に乗っているtoioの番号
     int onToioNum = 0;
