@@ -20,12 +20,12 @@ public class FirstFloor : MonoBehaviour
     int phase = 0;
     int check = 0;
 
-    Vector2 pos_slope = new Vector2(0, 0);
-    Vector2 pos_cube = new Vector2(0, 0);
+    Vector2 PosCubeLeft = new Vector2(0, 0);
+    Vector2 PosCubeRight = new Vector2(0, 0);
 
-    int angle_slope = 0;
+    int AngleCubeLeft = 0;
 
-    int L_cube=60;
+    int L_cube=30;
 
     public int connectNum = 4;
 
@@ -80,11 +80,11 @@ public class FirstFloor : MonoBehaviour
                 {
                     if(navigator.cube.id == toio_dict[FirstConnectionLeft] && navigator.cube.x != 0 && navigator.cube.y != 0)
                     {
-                        pos_slope = new Vector2(navigator.cube.x, navigator.cube.y);
-                        angle_slope = navigator.cube.angle;
+                        PosCubeLeft = new Vector2(navigator.cube.x, navigator.cube.y);
+                        AngleCubeLeft = navigator.cube.angle;
                         check += 1;
-                        pos_cube = CalculateNewPosition(pos_slope, angle_slope, L_cube);
-                        Debug.Log("pos_cube: " + pos_cube.x + ", " + pos_cube.y);
+                        PosCubeRight = CalculateNewPosition(PosCubeLeft, AngleCubeLeft, L_cube);
+                        Debug.Log("PosCubeRight: " + PosCubeRight.x + ", " + PosCubeRight.y);
                     }
                 }
                 else
@@ -93,7 +93,7 @@ public class FirstFloor : MonoBehaviour
                     {
                         if(navigator.cube.id == toio_dict[FirstConnectionRight])
                         {
-                            var mv = navigator.Navi2Target(pos_cube.x, pos_cube.y, maxSpd:20, rotateTime:1000,tolerance:15).Exec();
+                            var mv = navigator.Navi2Target(PosCubeRight.x, PosCubeRight.y, maxSpd:20, rotateTime:1000,tolerance:15).Exec();
                             if(mv.reached)
                             {
                                 phase += 1;
@@ -106,10 +106,10 @@ public class FirstFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[FirstConnectionRight])
                         {
                             // toio_dict[0](構成要素)とtoio_dict[1](足場)をくっつける
-                            Movement mv = navigator.handle.Rotate2Deg(angle_slope+90, rotateTime:2500, tolerance:0.1).Exec();
+                            Movement mv = navigator.handle.Rotate2Deg(AngleCubeLeft+90, rotateTime:2500, tolerance:0.1).Exec();
                             
                             // toio_dict[1](足場)とtoio_dict[2](構成要素)をくっつける
-                            // Movement mv = navigator.handle.Rotate2Deg(angle_slope+270, rotateTime:2500, tolerance:0.1).Exec();
+                            // Movement mv = navigator.handle.Rotate2Deg(AngleCubeLeft+270, rotateTime:2500, tolerance:0.1).Exec();
 
                             if(mv.reached)
                             {
