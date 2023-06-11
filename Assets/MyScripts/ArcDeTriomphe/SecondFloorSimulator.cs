@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 // 2層目を作るプログラム
 // 接続するtoio： 4, 5, 6, 7
 
-public class SecondFloor : MonoBehaviour
+public class SecondFloorSimulator : MonoBehaviour
 {  
     public Text label;
 
