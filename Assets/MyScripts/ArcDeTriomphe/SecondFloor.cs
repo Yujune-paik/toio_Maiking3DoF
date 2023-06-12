@@ -19,6 +19,7 @@ public class SecondFloor : MonoBehaviour
     public Button StartButton;
 
     bool StartClicked = false;
+    bool StartCheck3 = false;
 
     CubeManager cm;
     public ConnectType connectType = ConnectType.Simulator;
@@ -95,6 +96,7 @@ public class SecondFloor : MonoBehaviour
         Debug.Log(connectedCubes.Trim() + "と接続した");
     }
 
+    // Startボタンが押されたら，StartClickedをtrueにする
     void StartButtonClicked()
     {
         StartClicked = true;
@@ -428,14 +430,20 @@ public class SecondFloor : MonoBehaviour
                     {
                         phase = 0;
                         check ++;
+                        Debug.Log("手順2：PCを変えて，toio_dict[7]の座標&角度を入力してください");
                     }
                 }
 
                 else if(check == 3)
                 {
-                    // 矢印キー(下)を押されたら，以下の処理を始める
+                    // 矢印キー(下)が押されたら，StartCheck3をtrueにする
+                    if (Input.GetKeyDown(KeyCode.DownArrow))
+                    {
+                        StartCheck3 = true;
+                    }
+
                     // toio_dict[6]を2.5秒バックさせる(Move(-50,0,100))
-                    if (phase == 0)
+                    if (phase == 0 && StartCheck3 == true)
                     {
                         if(navigator.cube.id == toio_dict[6])
                         {
@@ -449,17 +457,29 @@ public class SecondFloor : MonoBehaviour
                     }
                     else if(phase == 1)
                     {
-                        navigator.handle.Move(20, 0, 100);
-                    }
-                }
+                        if(navigator.cube.id == toio_dict[6])
+                        {
+                            navigator.handle.Move(20, 0, 100);
+                        }
 
-                // 矢印キー(上)を押されたら，toio_dict[7](Slope)を前進(Move(50,0,100))
-                if (Input.GetKey(KeyCode.UpArrow))
-                {
-                    if(navigator.cube.id == toio_dict[7])
-                    {
-                        navigator.handle.Move(50, 0, 100);
+                        if (!isCoroutineRunning)
+                        {
+                            StartCoroutine(WaitAndIncrementPhase(2.5f));
+                        }
                     }
+                    else if(phase == 2)
+                    {
+                        if(navigator.handle.cube.id == toio_dict[7])
+                        {
+                            navigator.handle.Move(50, 0, 100);
+                        }
+                        if (!isCoroutineRunning)
+                        {
+                            StartCoroutine(WaitAndIncrementPhase(2.5f));
+                        }
+                    }
+
+                    Debug.Log("手順4：PCを変えて，toio_dict[0]の座標&角度を入力してください");
                 }
             }
 
@@ -491,4 +511,6 @@ public class SecondFloor : MonoBehaviour
         phase++;
         isCoroutineRunning = false;
     }
+
+    // 
 }

@@ -226,6 +226,7 @@ public class FirstFloor : MonoBehaviour
                     {
                         phase = 0;
                         check ++;
+                        Debug.Log("手順1：PCを変えて，toio_dict[0]の座標&角度を入力してください");
                     }
                 }
 
@@ -318,6 +319,13 @@ public class FirstFloor : MonoBehaviour
                                 Debug.Log("phase5");
                             }
                         }
+                    }
+
+                    else if(phase > 5)
+                    {
+                        phase = 0;
+                        check ++;
+                        Debug.Log("手順3：PCを変えて，矢印キー(下)を押してください");
                     }
                 }
 
