@@ -1242,7 +1242,6 @@ GameObject:
   - component: {fileID: 1435635261}
   - component: {fileID: 1435635260}
   - component: {fileID: 1435635263}
-  - component: {fileID: 1435635262}
   m_Layer: 0
   m_Name: ArcDeTriomphe
   m_TagString: Untagged
@@ -1278,6 +1277,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   label: {fileID: 1249587067}
+  InputFieldX: {fileID: 0}
+  InputFieldY: {fileID: 0}
+  InputFieldAngle: {fileID: 0}
+  StartButton: {fileID: 0}
   connectType: 2
 --- !u!114 &1435635261
 MonoBehaviour:
@@ -1286,27 +1289,17 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1435635258}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b5cae79595295764393f61c04e00ed0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   label: {fileID: 1249587067}
+  InputFieldX: {fileID: 1360029148}
+  InputFieldY: {fileID: 2068896335}
+  InputFieldAngle: {fileID: 994895671}
+  StartButton: {fileID: 2123369095}
   connectType: 2
---- !u!114 &1435635262
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1435635258}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af8bde4a3844aed4db4766ab31d2a91a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  label: {fileID: 1249587067}
-  connectType: 1
 --- !u!114 &1435635263
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1314,7 +1307,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1435635258}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: be6fcbcd391e5e647a496e8a90535f3d, type: 3}
   m_Name: 

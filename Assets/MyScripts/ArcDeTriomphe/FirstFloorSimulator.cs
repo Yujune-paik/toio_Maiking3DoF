@@ -46,7 +46,7 @@ public class FirstFloorSimulator : MonoBehaviour
     string SecondConnectionLeft = "Cube1"; // くっつかれるほう
     string SecondConnectionRight = "Cube2"; // くっつきに行くほう
 
-    // 3の位置
+    // Cube3の位置
     Vector2 PosCube3 = new Vector2(0, 0);
     int AngleCube3 = 0;
 
@@ -231,93 +231,91 @@ public class FirstFloorSimulator : MonoBehaviour
 
                 // "Cube3"の操作
                 else if(check == 3 && StartClicked)
-                {
+                { 
+                    if(phase == 0)
+                        {
+                        int x = int.Parse(InputFieldX.text);
+                        int y = int.Parse(InputFieldY.text);
+                        int angle = int.Parse(InputFieldAngle.text);
+                        if(navigator.cube.localName == "Cube3" && navigator.cube.x != 0 && navigator.cube.y != 0)
+                        {
+                            PosCube3 = CalculateNewPosition(new Vector2(x, y), angle, L_Slope);
+                            AngleCube3 = angle;
+                            Debug.Log("PosCube3: " + PosCube3.x + ", " + PosCube3.y + ", " + AngleCube3);
+                            phase += 1;
+                        }
+                    }
+                    else if(phase == 1)
                     {
-                        if(phase == 0)
+                        if(navigator.cube.localName == "Cube3")
                         {
-                            int x = int.Parse(InputFieldX.text);
-                            int y = int.Parse(InputFieldY.text);
-                            int angle = int.Parse(InputFieldAngle.text);
-                            if(navigator.cube.localName == "Cube3" && navigator.cube.x != 0 && navigator.cube.y != 0)
+                            var mv = navigator.Navi2Target(PosCube3.x, PosCube3.y, maxSpd:20, rotateTime:1000,tolerance:15).Exec();
+                            if(mv.reached)
                             {
-                                PosCube3 = CalculateNewPosition(new Vector2(x, y), angle, L_Slope);
-                                AngleCube3 = angle;
-                                Debug.Log("PosCube3: " + PosCube3.x + ", " + PosCube3.y + ", " + AngleCube3);
                                 phase += 1;
+                                Debug.Log("phase1_Cube3");
                             }
                         }
-                        else if(phase == 1)
+                    }
+                    else if(phase == 2)
+                    {
+                        if(navigator.cube.localName == "Cube3")
                         {
-                            if(navigator.cube.localName == "Cube3")
+                            Movement mv = navigator.handle.Rotate2Deg(AngleCube3, rotateTime:2500, tolerance:0.1).Exec();
+                            if(mv.reached)
                             {
-                                var mv = navigator.Navi2Target(PosCube3.x, PosCube3.y, maxSpd:20, rotateTime:1000,tolerance:15).Exec();
-                                if(mv.reached)
-                                {
-                                    phase += 1;
-                                    Debug.Log("phase1_Cube3");
-                                }
+                                phase += 1;
+                                Debug.Log("phase2_Cube3");
                             }
                         }
-                        else if(phase == 2)
+                    }
+                    else if(phase == 3)
+                    {
+                        if(navigator.cube.localName == "Cube3")
                         {
-                            if(navigator.cube.localName == "Cube3")
-                            {
-                                Movement mv = navigator.handle.Rotate2Deg(AngleCube3, rotateTime:2500, tolerance:0.1).Exec();
-                                if(mv.reached)
-                                {
-                                    phase += 1;
-                                    Debug.Log("phase2_Cube3");
-                                }
-                            }
+                            navigator.handle.Move(-50, 0, 100);
                         }
-                        else if(phase == 3)
-                        {
-                            if(navigator.cube.localName == "Cube3")
-                            {
-                                navigator.handle.Move(-50, 0, 100);
-                            }
 
-                            if (!isCoroutineRunning)
-                            {
-                                StartCoroutine(WaitAndIncrementPhase(2.5f));
-                                Debug.Log("phase3_Cube3");
-                            }
-                        }
-                        else if(phase == 4)
+                        if (!isCoroutineRunning)
                         {
-                            if(navigator.cube.localName == "Cube3")
-                            {
-                                float distanceToTarget = Vector2.Distance(navigator.cube.pos, PosCube3);
+                            StartCoroutine(WaitAndIncrementPhase(2.5f));
+                            Debug.Log("phase3_Cube3");
+                        }
+                    }
+                    else if(phase == 4)
+                    {
+                        if(navigator.cube.localName == "Cube3")
+                        {
+                            float distanceToTarget = Vector2.Distance(navigator.cube.pos, PosCube3);
 
-                                // PosFlat付近(>5)に到達するまでMove(-30,0,10)を実行する
-                                if(distanceToTarget > 5)
-                                {
-                                    navigator.handle.Move(-30, 0, 50);
-                                }
-                                else
-                                {
+                            // PosFlat付近(>5)に到達するまでMove(-30,0,10)を実行する
+                            if(distanceToTarget > 5)
+                            {
+                                navigator.handle.Move(-30, 0, 50);
+                            }
+                            else
+                            {
                                     phase += 1;
                                     Debug.Log("phase4_Cube3");
-                                }
                             }
                         }
-                        else if(phase == 5)
-                        {   
-                            // Cube3なら，toio_pos[0]との距離が5以下になるまでMove(15,0,100)を実行する
+                    }
+                    else if(phase == 5)
+                    {   
+                        // Cube3なら，toio_pos[0]との距離が5以下になるまでMove(15,0,100)を実行する
 
-                            if(navigator.cube.localName == "Cube3")
+                        if(navigator.cube.localName == "Cube3")
+                        {
+                            float distanceToTarget = Vector2.Distance(navigator.cube.pos, toio_pos[0]);
+
+                            if(distanceToTarget > 5)
                             {
-                                float distanceToTarget = Vector2.Distance(navigator.cube.pos, toio_pos[0]);
-
-                                if(distanceToTarget > 5)
-                                {
-                                    navigator.handle.Move(15, 0, 100);
-                                }
-                                else
-                                {
-                                    phase += 1;
-                                    Debug.Log("phase5_Cube3");
-                                }
+                                navigator.handle.Move(15, 0, 100);
+                            }
+                            else
+                            {
+                                phase += 1;
+                                Debug.Log("phase5_Cube3");
                             }
                         }
                     }
