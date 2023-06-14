@@ -292,6 +292,8 @@ GameObject:
   - component: {fileID: 921999671}
   - component: {fileID: 921999672}
   - component: {fileID: 921999673}
+  - component: {fileID: 921999674}
+  - component: {fileID: 921999675}
   m_Layer: 0
   m_Name: Connecting
   m_TagString: Untagged
@@ -343,6 +345,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   label: {fileID: 1357394610}
   connectType: 2
+  connectNum: 2
+--- !u!114 &921999674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 921999670}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74a6a43f9910d374682ef2ca0037b9d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  label: {fileID: 1357394610}
+  connectType: 2
+  connectNum: 2
+--- !u!114 &921999675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 921999670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d37b58c7ba956874c8c40d5f0554d78d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  label: {fileID: 1357394610}
+  connectType: 1
   connectNum: 2
 --- !u!1001 &1102847025
 PrefabInstance:

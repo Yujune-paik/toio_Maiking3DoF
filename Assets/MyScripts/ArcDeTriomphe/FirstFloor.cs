@@ -342,10 +342,24 @@ public class FirstFloor : MonoBehaviour
             }
 
             string text = "";
+            
             foreach (var cube in cm.syncCubes)
             {
-                if(cube.id == toio_dict[0]) text += "toio_dict[0]：(" + cube.x + "," + cube.y + "," + cube.angle + ")\n";                
+                if(cube.id == toio_dict[0])
+                {
+                    text += "toio_dict[0]：(" + cube.x + "," + cube.y + "," + cube.angle + ")\n";
+                }
+
+                // toio_dict[0]とtoio_dict[1]の距離を表示する．
+                if(cube.id == toio_dict[1])
+                {
+                    float distanceToTarget = Vector2.Distance(cm.syncCubes[0].pos, cm.syncCubes[1].pos);
+                    text += "toio_dict[1]：(" + cube.x + "," + cube.y + "," + cube.angle + ")\n";
+                    text += "toio_dict[0]とtoio_dict[1]の距離：" + distanceToTarget + "\n";
+                }
+
             }
+
             if (text != "") this.label.text = text;
         }
     }
