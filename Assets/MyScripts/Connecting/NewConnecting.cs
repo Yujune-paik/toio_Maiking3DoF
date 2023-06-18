@@ -157,81 +157,81 @@ public class NewConnecting : MonoBehaviour
 
                 // CubeLeftにCubeがくっつく
                 // Cubeの(位置,向き) = (CubeLeftの位置-90°の位置, CubeLeftの向き-90°)
-                // if(check == 1)
-                // {
-                //     // 1. まずはCubeRightの移動後の位置と角度を計算する
-                //     if(phase == 0)
-                //     {
-                //         if(navigator.cube.id == toio_dict[CubeLeft] && navigator.cube.x != 0 && navigator.cube.y != 0)
-                //         {
-                //             PosLeft = new Vector2(navigator.cube.x, navigator.cube.y);
-                //             AngleLeft = navigator.cube.angle;
-                //             PosCube = CalculateNewPosition(PosLeft, AngleLeft - 90, L);
-                //             AngleCube = AngleLeft - 90;
-                //             Debug.Log("PosCube: " +PosCube.x + ", " +PosCube.y);
-                //             phase += 1;
-                //         }
-                //     }
+                else if(check == 1)
+                {
+                    // 1. まずはCubeRightの移動後の位置と角度を計算する
+                    if(phase == 0)
+                    {
+                        if(navigator.cube.id == toio_dict[CubeLeft] && navigator.cube.x != 0 && navigator.cube.y != 0)
+                        {
+                            PosLeft = new Vector2(navigator.cube.x, navigator.cube.y);
+                            AngleLeft = navigator.cube.angle;
+                            PosCube = CalculateNewPosition(PosLeft, AngleLeft - 90, L);
+                            AngleCube = AngleLeft - 90;
+                            Debug.Log("PosCube: " + PosCube.x + ", " + PosCube.y);
+                            phase += 1;
+                        }
+                    }
 
-                //     // 2. CubeRightの座標へ移動させる
-                //     else if(phase == 1) 
-                //     {
-                //         if(navigator.cube.id == toio_dict[Cube])
-                //         {
-                //             var mv = navigator.Navi2Target(PosCube.x, PosCube.y, maxSpd:50).Exec();
-                //             if(mv.reached)
-                //             {
-                //                 phase += 1;
-                //                 Debug.Log("phase1");
-                //             }
-                //         }
-                //     }
+                    // 2. CubeRightの座標へ移動させる
+                    else if(phase == 1) 
+                    {
+                        if(navigator.cube.id == toio_dict[Cube])
+                        {
+                            var mv = navigator.Navi2Target(PosCube.x, PosCube.y, maxSpd:5).Exec();
+                            if(mv.reached)
+                            {
+                                phase += 1;
+                                Debug.Log("phase1");
+                            }
+                        }
+                    }
 
-                //     // 3-1. 指定した角度まで回転
-                //     else if(phase == 2) 
-                //     {
-                //         if(navigator.cube.id == toio_dict[Cube])
-                //         {
-                //             int angle_diff = AngleCube - navigator.cube.angle;
-                //             if(Math.Abs(angle_diff) < 5)
-                //             {
-                //                 phase += 1;
-                //                 Debug.Log("phase2");
-                //             }
-                //             else if(angle_diff > 0)
-                //             {
-                //                 navigator.handle.Move(0, 10, 20);
-                //             }
-                //             else
-                //             {
-                //                 navigator.handle.Move(0, -10, 20);
-                //             }
-                //         }
-                //     }
+                    // 3-1. 指定した角度まで回転
+                    else if(phase == 2) 
+                    {
+                        if(navigator.cube.id == toio_dict[Cube])
+                        {
+                            int angle_diff = AngleCube - navigator.cube.angle;
+                            if(Math.Abs(angle_diff) < 3)
+                            {
+                                phase += 1;
+                                Debug.Log("phase2");
+                            }
+                            else if(angle_diff > 0)
+                            {
+                                navigator.handle.Move(0, 20, 30);
+                            }
+                            else
+                            {
+                                navigator.handle.Move(0, -20, 30);
+                            }
+                        }
+                    }
 
-                //     // 3-2. 指定した距離まで移動
-                //     else if(phase == 3) 
-                //     {
-                //         if(navigator.cube.id == toio_dict[Cube])
-                //         {
-                //             float distance = Vector2.Distance(new Vector2(navigator.cube.x, navigator.cube.y), PosLeft);
-                //             if(distance < 25)
-                //             {
-                //                 phase += 1;
-                //                 Debug.Log("phase3");
-                //             }
-                //             else
-                //             {
-                //                 navigator.handle.Move(10, 0, 20);
-                //             }
-                //         }
-                //     }
-                //     else if(phase > 3)
-                //     {
-                //         check += 1;
-                //         phase = 0;
-                //     }
-                // }
+                    // 3-2. 指定した距離まで移動
+                    else if(phase == 3) 
+                    {
+                        if(navigator.cube.id == toio_dict[Cube])
+                        {
+                            float distance = Vector2.Distance(new Vector2(navigator.cube.x, navigator.cube.y), PosLeft);
+                            if(distance < 28)
+                            {
+                                phase += 1;
+                                Debug.Log("phase3");
+                            }
+                            else
+                            {
+                                navigator.handle.Move(-30, 0, 40);
+                            }
+                        }
+                    }
+                    else if(phase > 3)
+                    {
+                        check += 1;
+                        phase = 0;
+                    }
+                }
             }
 
             string text = "";
