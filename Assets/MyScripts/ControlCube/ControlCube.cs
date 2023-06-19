@@ -41,7 +41,7 @@ public class ControlCube : MonoBehaviour
     {
         foreach (var cube in cubeManager.syncCubes)
         {   
-            if(cube.id == toio_dict[2] || cube.id == toio_dict[1]){
+            if(cube.id == toio_dict[7] || cube.id == toio_dict[1]){
                 if (Input.GetKey(KeyCode.LeftArrow)) {
                     cube.Move(-20, 20, 50);
                 } else if (Input.GetKey(KeyCode.RightArrow)) {

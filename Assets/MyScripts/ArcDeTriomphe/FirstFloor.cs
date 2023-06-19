@@ -25,33 +25,42 @@ public class FirstFloor : MonoBehaviour
 
     int phase = 0;
     int check = 0;
+    bool s = false;
 
     bool isCoroutineRunning = false;
-
-    Vector2 PosCubeLeft = new Vector2(0, 0);
-    Vector2 PosCubeRight = new Vector2(0, 0);
-
-    int AngleCubeLeft = 0;
 
     int L = 50; // Cube同士の接続に用いる距離
     int L_Slope = 70; // Slopeの前にCubeが配置するときに用いる距離
 
-    int connectNum = 4;
+    int connectNum = 3;
 
     // 0と1がくっつく
-    int FirstConnectionLeft = 1; // くっつかれるほう
-    int FirstConnectionRight = 0; // くっつきに行くほう
+    int FirstLeft = 1; // くっつかれるほう
+    int FirstRight = 0; // くっつきに行くほう
 
     // 1と2がくっつく
-    int SecondConnectionLeft = 1; // くっつかれるほう
-    int SecondConnectionRight = 2; // くっつきに行くほう
+    int SecondLeft = 1; // くっつかれるほう
+    int SecondRight = 2; // くっつきに行くほう
 
-    // toio_dict[3]の位置
+    // toioの座標
+    Vector2 PosCube0 = new Vector2(0, 0);
+    Vector2 PosCube1 = new Vector2(0, 0);
+    Vector2 PosCube2 = new Vector2(0, 0);
     Vector2 PosCube3 = new Vector2(0, 0);
+    Vector2 PosCube7 = new Vector2(0, 0);
+
+    // toioの角度
+    int AngleCube0 = 0;
+    int AngleCube1 = 0;
+    int AngleCube2 = 0;
     int AngleCube3 = 0;
+    int AngleCube7 = 0;
 
     // Slopeの上り切った平らなところの座標
     Vector2 PosFlat = new Vector2(242, 342);
+
+    float timeSinceLastOrder = 0f;
+    float orderInterval = 0.1f;
 
     // CSVファイルの読み込み
     Dictionary<int, string> toio_dict = new Dictionary<int, string>(); // Cubeの番号とIDの対応付け
@@ -86,6 +95,7 @@ public class FirstFloor : MonoBehaviour
         }
         // 接続台数をコンソールに表示する
         Debug.Log(cm.syncCubes.Count);
+        s = true;
 
         // 接続したCubeの名前を表示する
         string connectedCubes = "";
@@ -96,99 +106,38 @@ public class FirstFloor : MonoBehaviour
         Debug.Log(connectedCubes.Trim() + "と接続した");
     }
 
-    void StartButtonClicked()
-    {
-        StartClicked = true;
-    }
-
     void Update()
     {
-        if (cm.synced)
+        timeSinceLastOrder += Time.deltaTime;
+        if (cm.synced && timeSinceLastOrder >= orderInterval && s)
         {
+            timeSinceLastOrder = 0f;
+
             foreach(var navigator in cm.syncNavigators)
             {
-                // toio_dict[0](構成要素)とtoio_dict[1](足場)をくっつける
+                // Step1. Cube0(構成要素)とCube1(足場)をくっつける
                 if(check == 0)
-                {
-                    // 移動後のtoio_dict[0]の座標を計算
-                    if(navigator.cube.id == toio_dict[FirstConnectionLeft] && navigator.cube.x != 0 && navigator.cube.y != 0)
-                    {
-                        PosCubeLeft = new Vector2(navigator.cube.x, navigator.cube.y);
-                        AngleCubeLeft = navigator.cube.angle;
-                        check += 1;
-                        PosCubeRight = CalculateNewPosition(PosCubeLeft, AngleCubeLeft+90, L);
-                        Debug.Log("PosCubeRight_First: " + PosCubeRight.x + ", " + PosCubeRight.y);
-                    }
-                }
-                else if(check == 1)
-                {
-                    // PosCubeRightの座標へ移動
+                {   
+                    // 1. Cube0の移動後の座標と角度を計算
                     if(phase == 0)
                     {
-                        if(navigator.cube.id == toio_dict[FirstConnectionRight])
+                        if(navigator.cube.id == toio_dict[FirstLeft] && navigator.cube.x != 0 && navigator.cube.y != 0)
                         {
-                            var mv = navigator.Navi2Target(PosCubeRight.x, PosCubeRight.y, maxSpd:20, rotateTime:1000,tolerance:15).Exec();
-                            if(mv.reached)
-                            {
-                                phase += 1;
-                                Debug.Log("phase0");
-                            }
-                        }
-                    }
-
-                    // 指定された角度へ回転
-                    else if(phase == 1)
-                    {
-                        if(navigator.cube.id == toio_dict[FirstConnectionRight])
-                        {
-                            Movement mv = navigator.handle.Rotate2Deg(AngleCubeLeft-90, rotateTime:2500, tolerance:0.1).Exec();
-                            
-                            if(mv.reached)
-                            {
-                                phase += 1;
-                                Debug.Log("phase1");
-                            }
-                        }
-                    }
-                    else if(phase == 2)
-                    {
-                        if(navigator.cube.id == toio_dict[FirstConnectionRight])
-                        {
-                            navigator.handle.Move(15, 0, 100);
-                        }
-
-                        if (!isCoroutineRunning)
-                        {
-                            StartCoroutine(WaitAndIncrementPhase(1.0f));
-                            Debug.Log("phase2");
-                        }
-                    }
-                    else if(phase > 2)
-                    {
-                        check ++;
-                        phase = 0;
-                    }
-                }
-
-                // toio_dict[1](足場)とtoio_dict[2](新しい構成要素)をくっつける
-                else if(check == 2)
-                {
-                    if(phase == 0)
-                    {
-                        if(navigator.cube.id == toio_dict[SecondConnectionLeft]&& navigator.cube.x != 0 && navigator.cube.y != 0)
-                        {
-                            PosCubeLeft = new Vector2(navigator.cube.x, navigator.cube.y);
-                            AngleCubeLeft = navigator.cube.angle;
-                            PosCubeRight = CalculateNewPosition(PosCubeLeft, AngleCubeLeft-90, L);
-                            Debug.Log("PosCubeRight_Second: " + PosCubeRight.x + ", " + PosCubeRight.y);
+                            PosCube1 = new Vector2(navigator.cube.x, navigator.cube.y);
+                            AngleCube1 = navigator.cube.angle;
+                            PosCube0 = CalculateNewPosition(PosCube1, AngleCube1 + 90, L);
+                            AngleCube0 = AngleCube1 - 90;
+                            Debug.Log("PosCube0_First: " + PosCube0.x + ", " + PosCube0.y + ", " + AngleCube0);
                             phase += 1;
                         }
                     }
+                
+                    // 2. Cube0を1で求めた座標へ移動
                     else if(phase == 1)
                     {
-                        if(navigator.cube.id == toio_dict[SecondConnectionRight])
+                        if(navigator.cube.id == toio_dict[FirstRight])
                         {
-                            var mv = navigator.Navi2Target(PosCubeRight.x, PosCubeRight.y, maxSpd:20, rotateTime:1000,tolerance:15).Exec();
+                            var mv = navigator.Navi2Target(PosCube0.x, PosCube0.y, maxSpd:5).Exec();
                             if(mv.reached)
                             {
                                 phase += 1;
@@ -196,56 +145,160 @@ public class FirstFloor : MonoBehaviour
                             }
                         }
                     }
+
+                    // 3. Cube0を1で求めた角度まで回転
                     else if(phase == 2)
                     {
-                        if(navigator.cube.id == toio_dict[SecondConnectionRight])
+                        if(navigator.cube.id == toio_dict[FirstRight])
                         {
-                            Movement mv = navigator.handle.Rotate2Deg(AngleCubeLeft-90, rotateTime:2500, tolerance:0.1).Exec();
-                            if(mv.reached)
+                            int angle_diff = AngleCube0 - navigator.cube.angle;
+                            if(Math.Abs(angle_diff) < 3)
                             {
                                 phase += 1;
                                 Debug.Log("phase2");
                             }
+                            else if(angle_diff > 0)
+                            {
+                                navigator.handle.Move(0, 10, 20);
+                            }
+                            else
+                            {
+                                navigator.handle.Move(0, -10, 20);
+                            }
                         }
                     }
+
+                    // 4. Cube0をCube1にくっつける
                     else if(phase == 3)
                     {
-                        if(navigator.cube.id == toio_dict[SecondConnectionRight])
+                        if(navigator.cube.id == toio_dict[FirstRight])
                         {
-                            navigator.handle.Move(-15, 0, 100);
-                        }
-
-                        if (!isCoroutineRunning)
-                        {
-                            StartCoroutine(WaitAndIncrementPhase(1.0f));
-                            Debug.Log("phase3");
+                            float distance = Vector2.Distance(new Vector2(navigator.cube.x, navigator.cube.y), PosCube1);
+                            if(distance < 28)
+                            {
+                                phase += 1;
+                                Debug.Log("phase3");
+                            }
+                            else
+                            {
+                                navigator.handle.Move(30, 0, 40);
+                            }
                         }
                     }
 
+                    // 5. checkをインクリメントし, phaseを初期化
                     else if(phase > 3)
                     {
+                        check += 1;
                         phase = 0;
-                        check ++;
+                        Debug.Log("check: " + check);
+                    }
+                }
+
+                // Step2. Cube2(構成要素)とCube1(足場)をくっつける
+                else if(check == 1)
+                {
+                    // 1. Cube2の移動後の座標と角度を計算
+                    if(phase == 0)
+                    {
+                        if(navigator.cube.id == toio_dict[SecondLeft] && navigator.cube.x != 0 && navigator.cube.y != 0)
+                        {
+                            PosCube1 = new Vector2(navigator.cube.x, navigator.cube.y);
+                            AngleCube1 = navigator.cube.angle;
+                            PosCube2 = CalculateNewPosition(PosCube1, AngleCube1 - 90, L);
+                            AngleCube2 = AngleCube1 - 90;
+                            Debug.Log("PosCube2_Second: " + PosCube2.x + ", " + PosCube2.y + ", " + AngleCube2);
+                            phase += 1;
+                        }
+                    }
+                
+                    // 2. Cube2を1で求めた座標へ移動
+                    else if(phase == 1)
+                    {
+                        if(navigator.cube.id == toio_dict[SecondRight])
+                        {
+                            var mv = navigator.Navi2Target(PosCube2.x, PosCube2.y, maxSpd:5).Exec();
+                            if(mv.reached)
+                            {
+                                phase += 1;
+                                Debug.Log("phase1");
+                            }
+                        }
+                    }
+
+                    // 3. Cube2を1で求めた角度まで回転
+                    else if(phase == 2)
+                    {
+                        if(navigator.cube.id == toio_dict[SecondRight])
+                        {
+                            int angle_diff = AngleCube2 - navigator.cube.angle;
+                            if(Math.Abs(angle_diff) < 3)
+                            {
+                                phase += 1;
+                                Debug.Log("phase2");
+                            }
+                            else if(angle_diff > 0)
+                            {
+                                navigator.handle.Move(0, 10, 20);
+                            }
+                            else
+                            {
+                                navigator.handle.Move(0, -10, 20);
+                            }
+                        }
+                    }
+
+                    // 4. Cube2をCube1にくっつける
+                    else if(phase == 3)
+                    {
+                        if(navigator.cube.id == toio_dict[SecondRight])
+                        {
+                            float distance = Vector2.Distance(new Vector2(navigator.cube.x, navigator.cube.y), PosCube1);
+                            if(distance < 28)
+                            {
+                                phase += 1;
+                                Debug.Log("phase3");
+                            }
+                            else
+                            {
+                                navigator.handle.Move(-30, 0, 40);
+                            }
+                        }
+                    }
+
+                    // 5. checkをインクリメントし, phaseを初期化
+                    else if(phase > 3)
+                    {
+                        check += 1;
+                        phase = 0;
+                        Debug.Log("check: " + check);
                         Debug.Log("手順1：PCを変えて，toio_dict[0]の座標&角度を入力してください");
                     }
                 }
 
-                // toio_dict[3]の操作
+                // Step3. Cube3をCube0の上に移動させる
                 else if(check == 3 && StartClicked)
-                { 
+                {
+                    // 1. Cube3の移動後の座標と角度を計算
                     if(phase == 0)
-                        {
-                        int x = int.Parse(InputFieldX.text);
-                        int y = int.Parse(InputFieldY.text);
-                        int angle = int.Parse(InputFieldAngle.text);
+                    {
                         if(navigator.cube.id == toio_dict[3] && navigator.cube.x != 0 && navigator.cube.y != 0)
                         {
+                            // InputFieldから座標と角度を取得し，PosCube7とAngleCube7に代入
+                            float x = float.Parse(x_input.text);
+                            float y = float.Parse(y_input.text);
+                            int angle = int.Parse(angle_input.text);
+                            PosCube7 = new Vector2(x, y);
+                            AngleCube7 = angle;
+
                             PosCube3 = CalculateNewPosition(new Vector2(x, y), angle, L_Slope);
                             AngleCube3 = angle;
                             Debug.Log("Pos_toio_dict[3]: " + PosCube3.x + ", " + PosCube3.y + ", " + AngleCube3);
                             phase += 1;
                         }
                     }
+
+                    // 2. Cube3を1で求めた座標へ移動
                     else if(phase == 1)
                     {
                         if(navigator.cube.id == toio_dict[3])
@@ -258,6 +311,8 @@ public class FirstFloor : MonoBehaviour
                             }
                         }
                     }
+
+                    // 3. Cube3を1で求めた角度まで回転s
                     else if(phase == 2)
                     {
                         if(navigator.cube.id == toio_dict[3])
@@ -270,61 +325,68 @@ public class FirstFloor : MonoBehaviour
                             }
                         }
                     }
+
+                    // 4. Cube3をCube7の坂に乗せる
                     else if(phase == 3)
                     {
                         if(navigator.cube.id == toio_dict[3])
                         {
-                            navigator.handle.Move(-50, 0, 100);
-                        }
-
-                        if (!isCoroutineRunning)
-                        {
-                            StartCoroutine(WaitAndIncrementPhase(2.5f));
-                            Debug.Log("phase3");
+                            float distance = Vector2.Distance(new Vector2(navigator.cube.x, navigator.cube.y), PosCube7);
+                            if(distance < L_Slope - 3)
+                            {
+                                phase += 1;
+                                Debug.Log("phase3");
+                            }
+                            else
+                            {
+                                navigator.handle.Move(-50, 0, 100);
+                            }
                         }
                     }
+
+                    // 4. Cube3がPosFlat付近(distance < 5)までバックする
                     else if(phase == 4)
                     {
                         if(navigator.cube.id == toio_dict[3])
                         {
-                            float distanceToTarget = Vector2.Distance(navigator.cube.pos, PosCube3);
-
-                            // PosFlat付近(>5)に到達するまでMove(-30,0,10)を実行する
-                            if(distanceToTarget > 5)
+                            float distance = Vector2.Distance(new Vector2(navigator.cube.x, navigator.cube.y), PosFlat);
+                            if(distance < 5)
+                            {
+                                phase += 1;
+                                Debug.Log("phase4");
+                            }
+                            else
                             {
                                 navigator.handle.Move(-30, 0, 50);
                             }
-                            else
-                            {
-                                    phase += 1;
-                                    Debug.Log("phase4");
-                            }
                         }
                     }
+
+                    // 5. Cube3をCube0の上に移動させる(= Cube3をtoio_pos[0]との距離が5以下になるまでMove(10,0,20)を実行する)
                     else if(phase == 5)
                     {   
-                        // Cube3なら，toio_pos[0]との距離が5以下になるまでMove(15,0,100)を実行する
-
                         if(navigator.cube.id == toio_dict[3])
                         {
-                            float distanceToTarget = Vector2.Distance(navigator.cube.pos, toio_pos[0]);
+                            float distance = Vector2.Distance(navigator.cube.pos, toio_pos[0]);
 
-                            if(distanceToTarget > 5)
-                            {
-                                navigator.handle.Move(15, 0, 100);
-                            }
-                            else
+                            if(distance < 5)
                             {
                                 phase += 1;
                                 Debug.Log("phase5");
                             }
+                            else
+                            {
+                                navigator.handle.Move(10, 0, 20);
+                            }
                         }
                     }
 
+                    // checkをインクリメントし, phaseを初期化
                     else if(phase > 5)
                     {
+                        check += 1;
                         phase = 0;
-                        check ++;
+                        Debug.Log("check: " + check);
                         Debug.Log("手順3：PCを変えて，矢印キー(下)を押してください");
                     }
                 }
@@ -344,7 +406,7 @@ public class FirstFloor : MonoBehaviour
             string text = "";
             foreach (var cube in cm.syncCubes)
             {
-                if(cube.id == toio_dict[0]) text += "toio_dict[0]：(" + cube.x + "," + cube.y + "," + cube.angle + ")\n";                
+                if(cube.id == toio_dict[0]) text += "Cube0：(" + cube.x + "," + cube.y + "," + cube.angle + ")\n";                
             }
             if (text != "") this.label.text = text;
         }
@@ -378,5 +440,11 @@ public class FirstFloor : MonoBehaviour
             if(item.Value == cubeId) return item.Key;
         }
         return -1;
+    }
+
+    // Buttonが押されたら，StartClickedをtrueにする
+    void StartButtonClicked()
+    {
+        StartClicked = true;
     }
 }
