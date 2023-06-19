@@ -285,9 +285,9 @@ public class FirstFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[3] && navigator.cube.x != 0 && navigator.cube.y != 0)
                         {
                             // InputFieldから座標と角度を取得し，PosCube7とAngleCube7に代入
-                            float x = float.Parse(x_input.text);
-                            float y = float.Parse(y_input.text);
-                            int angle = int.Parse(angle_input.text);
+                            float x = float.Parse(InputFieldX.text);
+                            float y = float.Parse(InputFieldY.text);
+                            int angle = int.Parse(InputFieldAngle.text);
                             PosCube7 = new Vector2(x, y);
                             AngleCube7 = angle;
 

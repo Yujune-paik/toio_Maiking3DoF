@@ -637,6 +637,7 @@ GameObject:
   - component: {fileID: 1991213758}
   - component: {fileID: 1991213757}
   - component: {fileID: 1991213759}
+  - component: {fileID: 1991213760}
   m_Layer: 0
   m_Name: Slope
   m_TagString: Untagged
@@ -696,9 +697,23 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1991213755}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5eb74e661b66fb346a59c6a11c5a060f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  label: {fileID: 1753131981}
+  connectType: 2
+--- !u!114 &1991213760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1991213755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f65aedf70420b3f4a973397aff3838f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   label: {fileID: 1753131981}
