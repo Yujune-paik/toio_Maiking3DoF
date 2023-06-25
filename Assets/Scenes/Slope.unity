@@ -638,6 +638,8 @@ GameObject:
   - component: {fileID: 1991213757}
   - component: {fileID: 1991213759}
   - component: {fileID: 1991213760}
+  - component: {fileID: 1991213761}
+  - component: {fileID: 1991213762}
   m_Layer: 0
   m_Name: Slope
   m_TagString: Untagged
@@ -711,9 +713,37 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1991213755}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f65aedf70420b3f4a973397aff3838f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  label: {fileID: 1753131981}
+  connectType: 2
+--- !u!114 &1991213761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1991213755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3a137a0557f2534f8ae395c854c982e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  label: {fileID: 1753131981}
+  connectType: 2
+--- !u!114 &1991213762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1991213755}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b16677bb1a7d7bc42af0a9104a7b81f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   label: {fileID: 1753131981}
