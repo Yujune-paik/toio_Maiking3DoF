@@ -30,6 +30,7 @@ public class FirstFloor : MonoBehaviour
     bool isCoroutineRunning = false;
 
     int L = 50; // Cube同士の接続に用いる距離
+    int L_Cube = 30; // Cubeの大きさ
     int L_Slope = 70; // Slopeの前にCubeが配置するときに用いる距離
 
     int connectNum = 3;
@@ -55,6 +56,26 @@ public class FirstFloor : MonoBehaviour
     int AngleCube2 = 0;
     int AngleCube3 = 0;
     int AngleCube7 = 0;
+
+    // **************************
+    // phase==3で使用する変数
+    int x1 = 0;
+    int y1 = 0;
+    int theta1 = 0;
+
+    int x2 = 0;
+    int y2 = 0;
+    int theta2 = 0;
+
+    int alpha = 0;
+    int beta = 0;
+    int gamma = 0;
+
+    Vector2 v = new Vector2(0, 0);
+    Vector2 R = new Vector2(0, 0);
+
+    int d = 0;
+    // **************************
 
     // Slopeの上り切った平らなところの座標
     Vector2 PosFlat = new Vector2(242, 342);
@@ -146,7 +167,7 @@ public class FirstFloor : MonoBehaviour
                         }
                     }
 
-                    // 3. Cube0を1で求めた角度まで回転
+                    // 3-1. Cube0を1で求めた角度まで回転
                     else if(phase == 2)
                     {
                         if(navigator.cube.id == toio_dict[FirstRight])
@@ -168,8 +189,137 @@ public class FirstFloor : MonoBehaviour
                         }
                     }
 
-                    // 4. Cube0をCube1にくっつける
+                    // 3-2. Cube0を軌道修正する
                     else if(phase == 3)
+                    {
+                        if(navigator.cube.id == toio_dict[FirstRight])
+                        {
+                            // 3-2-1. 必要な情報を変数に保存する
+                            // 3-2-1-1. CubeLeftの位置と角度をそれぞれx1, y1, theta1に保存
+                            // 3-2-1-2. FirstRightの位置と角度をそれぞれx2, y2, theta2に保存
+                            // CubeLeftの情報はPosCube1とAngleCube1から取得，FirstRightの情報はnavigator.cubeから取得
+                            x1 = (int)PosCube1.x;
+                            y1 = (int)PosCube1.y;
+                            theta1 = AngleCube1;
+
+                            x2 = navigator.cube.x;
+                            y2 = navigator.cube.y;
+                            theta2 = navigator.cube.angle;
+
+                            // 3-2-1-3. alpha, betaの値は90, 0とする (右にくっつき，前進してくっつく場合)
+                            alpha = 90;
+                            beta = 0;
+                        
+
+                            // 3-2-2. 3-2-1で取得した変数をもとに，計算する
+
+                            // 3-2-2-1. d = numerator/denominatorを計算する
+                            // numerator = y1-y2+(L_Cube/2)*sin(theta1+alpha)-tan(theta2+beta)*(x1-x2+(L_Cube/2)*cos(theta1+alpha))
+                            // denominator = tan(theta2+beta)*cos(theta1+alpha-90)-sin(theta1+alpha-90)
+                            float numerator = y1 - y2 + (L_Cube / 2) * Mathf.Sin((theta1+alpha)*Mathf.Deg2Rad) - Mathf.Tan((theta2+beta)*Mathf.Deg2Rad) * (x1 - x2 + (L_Cube / 2) * Mathf.Cos((theta1+alpha)*Mathf.Deg2Rad));
+                            float denominator = Mathf.Tan((theta2+beta)*Mathf.Deg2Rad) * Mathf.Cos((theta1+alpha-90)*Mathf.Deg2Rad) - Mathf.Sin((theta1+alpha-90)*Mathf.Deg2Rad);
+                            // dはint型であることに注意してください
+                            d = (int)(numerator / denominator);
+
+                            // 3-2-2-2. R=(x2+0.8*|d|*cos(gamma), y2+0.8*|d|*sin(gamma))を計算する
+                            if(d<0) gamma = theta1 + alpha - 90;
+                            else gamma = theta1 + alpha + 90;
+
+                            // gammaが360以上の場合は360を引く
+                            if(gamma >= 360) gamma -= 360;
+                            // gammaが0未満の場合は360を足す
+                            else if(gamma < 0) gamma += 360;
+
+                            float angleRadians = gamma * Mathf.Deg2Rad;
+                            R = new Vector2((int)(x2 + 0.8f * Mathf.Abs(d) * Mathf.Cos(angleRadians)), (int)(y2 + 0.8f * Mathf.Abs(d) * Mathf.Sin(angleRadians)));
+
+                            phase += 1;
+                            
+                            Debug.Log("d: " + d);
+                            Debug.Log("R:( " + R.x + ", " + R.y + ")");
+                            Debug.Log("phase3");
+                        }
+                    }
+
+                    else if(phase == 4)
+                    {
+                        // 3-2-3. |d|<2なら，次のphaseへ進む．そうでなければ，以下の処理を行う．
+                        if(Mathf.Abs(d) < 2)
+                        {
+                            phase = 8;
+                            Debug.Log("phase4");
+                        }
+                        else
+                        {
+                            phase += 1;
+                        }
+                    }
+                    else if(phase == 5)
+                    {
+                        if(navigator.cube.id == toio_dict[FirstRight])
+                        {            
+                            // 3-2-4. FirstRightをgammaまで回転させる
+                            int angle_diff = gamma - navigator.cube.angle;
+                            Debug.Log("angle_diff: " + angle_diff);
+                            if(Math.Abs(angle_diff) < 5)
+                            {
+                                phase += 1;
+                                Debug.Log("phase5");
+                            }
+                            else if(angle_diff > 0)
+                            {
+                                navigator.handle.Move(0, 20, 20);
+                            }
+                            else
+                            {
+                                navigator.handle.Move(0, -20, 20);
+                            }
+                        }
+                    }
+                    else if(phase == 6)
+                    {
+                        if(navigator.cube.id == toio_dict[FirstRight])
+                        {
+                            // 3-2-5. FirstRightをRまで移動させる
+                            var distance = Vector2.Distance(new Vector2(navigator.cube.x, navigator.cube.y), R);
+                            if(distance < 5)
+                            {
+                                phase += 1;
+                                Debug.Log("phase6");
+                            }
+                            else{
+                                navigator.handle.Move(20, 0, 20);
+                            }
+                        }
+                    }
+
+                    else if(phase == 7)
+                    {
+                        if(navigator.cube.id == toio_dict[FirstRight])
+                        {
+                            // 3-2-6. FirstRightをAngleCube0まで回転させる
+                            int angle_diff = AngleCube0 - navigator.cube.angle;
+                            if(Math.Abs(angle_diff) < 3)
+                            {
+                                phase =3;
+                                Debug.Log("phase7");
+                            }
+                            else
+                            {
+                                if(angle_diff > 0)
+                                {
+                                    navigator.handle.Move(0, 20, 20);
+                                }
+                                else
+                                {
+                                    navigator.handle.Move(0, -20, 20);
+                                }
+                            }
+                        }
+                    }
+
+                    // 4. Cube0をCube1にくっつける
+                    else if(phase == 8)
                     {
                         if(navigator.cube.id == toio_dict[FirstRight])
                         {
@@ -177,7 +327,7 @@ public class FirstFloor : MonoBehaviour
                             if(distance < 28)
                             {
                                 phase += 1;
-                                Debug.Log("phase3");
+                                Debug.Log("phase8");
                             }
                             else
                             {
@@ -187,7 +337,7 @@ public class FirstFloor : MonoBehaviour
                     }
 
                     // 5. checkをインクリメントし, phaseを初期化
-                    else if(phase > 3)
+                    else if(phase > 8)
                     {
                         check += 1;
                         phase = 0;
@@ -248,8 +398,148 @@ public class FirstFloor : MonoBehaviour
                         }
                     }
 
-                    // 4. Cube2をCube1にくっつける
+                    // 3-2. SecondRightを軌道修正する
                     else if(phase == 3)
+                    {
+                        if(navigator.cube.id == toio_dict[SecondRight])
+                        {
+                            // 3-2-1. 必要な情報を変数に保存する
+                            // 3-2-1-1. CubeLeftの位置と角度をそれぞれx1, y1, theta1に保存
+                            // 3-2-1-2. SecondRightの位置と角度をそれぞれx2, y2, theta2に保存
+                            // CubeLeftの情報はPosCube1とAngleCube1から取得，SecondRightの情報はnavigator.cubeから取得
+                            x1 = (int)PosCube1.x;
+                            y1 = (int)PosCube1.y;
+                            theta1 = AngleCube1;
+
+                            x2 = navigator.cube.x;
+                            y2 = navigator.cube.y;
+                            theta2 = navigator.cube.angle;
+
+                            // 3-2-1-3. alpha, betaの値は90, 0とする (右にくっつき，前進してくっつく場合)
+                            alpha = 90;
+                            beta = 0;
+                        
+
+                            // 3-2-2. 3-2-1で取得した変数をもとに，計算する
+
+                            // 3-2-2-1. d = numerator/denominatorを計算する
+                            // numerator = y1-y2+(L_Cube/2)*sin(theta1+alpha)-tan(theta2+beta)*(x1-x2+(L_Cube/2)*cos(theta1+alpha))
+                            // denominator = tan(theta2+beta)*cos(theta1+alpha-90)-sin(theta1+alpha-90)
+                            float numerator = y1 - y2 + (L_Cube / 2) * Mathf.Sin((theta1+alpha)*Mathf.Deg2Rad) - Mathf.Tan((theta2+beta)*Mathf.Deg2Rad) * (x1 - x2 + (L_Cube / 2) * Mathf.Cos((theta1+alpha)*Mathf.Deg2Rad));
+                            float denominator = Mathf.Tan((theta2+beta)*Mathf.Deg2Rad) * Mathf.Cos((theta1+alpha-90)*Mathf.Deg2Rad) - Mathf.Sin((theta1+alpha-90)*Mathf.Deg2Rad);
+                            // dはint型であることに注意してください
+                            d = (int)(numerator / denominator);
+
+                            // 3-2-2-2. R=(x2+0.8*|d|*cos(gamma), y2+0.8*|d|*sin(gamma))を計算する
+                            if(d<0) gamma = theta1 + alpha - 90;
+                            else gamma = theta1 + alpha + 90;
+
+                            // gammaが360以上の場合は360を引く
+                            if(gamma >= 360) gamma -= 360;
+                            // gammaが0未満の場合は360を足す
+                            else if(gamma < 0) gamma += 360;
+
+                            float angleRadians = gamma * Mathf.Deg2Rad;
+                            R = new Vector2((int)(x2 + 0.8f * Mathf.Abs(d) * Mathf.Cos(angleRadians)), (int)(y2 + 0.8f * Mathf.Abs(d) * Mathf.Sin(angleRadians)));
+
+                            phase += 1;
+                            // theta1, alpha, theta2, beta, x1, x2, y1, y2を表示
+                            Debug.Log("theta1: " + theta1);
+                            Debug.Log("alpha: " + alpha);
+                            Debug.Log("theta2: " + theta2);
+                            Debug.Log("beta: " + beta);
+                            Debug.Log("x1: " + x1);
+                            Debug.Log("x2: " + x2);
+                            Debug.Log("y1: " + y1);
+                            Debug.Log("y2: " + y2);
+
+                            Debug.Log("分子: " + numerator);
+                            Debug.Log("分母: " + denominator);
+                            Debug.Log("d: " + d);
+                            Debug.Log("R:( " + R.x + ", " + R.y + ")");
+                            Debug.Log("phase3");
+                        }
+                    }
+
+                    else if(phase == 4)
+                    {
+                        // 3-2-3. |d|<2なら，次のphaseへ進む．そうでなければ，以下の処理を行う．
+                        if(Mathf.Abs(d) < 2)
+                        {
+                            phase = 8;
+                            Debug.Log("phase4");
+                        }
+                        else
+                        {
+                            phase += 1;
+                        }
+                    }
+                    else if(phase == 5)
+                    {
+                        if(navigator.cube.id == toio_dict[SecondRight])
+                        {            
+                            // 3-2-4. SecondRightをgammaまで回転させる
+                            int angle_diff = gamma - navigator.cube.angle;
+                            Debug.Log("angle_diff: " + angle_diff);
+                            if(Math.Abs(angle_diff) < 5)
+                            {
+                                phase += 1;
+                                Debug.Log("phase5");
+                            }
+                            else if(angle_diff > 0)
+                            {
+                                navigator.handle.Move(0, 20, 20);
+                            }
+                            else
+                            {
+                                navigator.handle.Move(0, -20, 20);
+                            }
+                        }
+                    }
+                    else if(phase == 6)
+                    {
+                        if(navigator.cube.id == toio_dict[SecondRight])
+                        {
+                            // 3-2-5. SecondRightをRまで移動させる
+                            var distance = Vector2.Distance(new Vector2(navigator.cube.x, navigator.cube.y), R);
+                            if(distance < 5)
+                            {
+                                phase += 1;
+                                Debug.Log("phase6");
+                            }
+                            else{
+                                navigator.handle.Move(20, 0, 20);
+                            }
+                        }
+                    }
+
+                    else if(phase == 7)
+                    {
+                        if(navigator.cube.id == toio_dict[SecondRight])
+                        {
+                            // 3-2-6. SecondRightをAngleCube2まで回転させる
+                            int angle_diff = AngleCube2 - navigator.cube.angle;
+                            if(Math.Abs(angle_diff) < 3)
+                            {
+                                phase =3;
+                                Debug.Log("phase7");
+                            }
+                            else
+                            {
+                                if(angle_diff > 0)
+                                {
+                                    navigator.handle.Move(0, 20, 20);
+                                }
+                                else
+                                {
+                                    navigator.handle.Move(0, -20, 20);
+                                }
+                            }
+                        }
+                    }
+
+                    // 4. Cube2をCube1にくっつける
+                    else if(phase == 8)
                     {
                         if(navigator.cube.id == toio_dict[SecondRight])
                         {
@@ -257,7 +547,7 @@ public class FirstFloor : MonoBehaviour
                             if(distance < 28)
                             {
                                 phase += 1;
-                                Debug.Log("phase3");
+                                Debug.Log("phase8");
                             }
                             else
                             {
@@ -267,7 +557,7 @@ public class FirstFloor : MonoBehaviour
                     }
 
                     // 5. checkをインクリメントし, phaseを初期化
-                    else if(phase > 3)
+                    else if(phase > 8)
                     {
                         check += 1;
                         phase = 0;
@@ -277,7 +567,7 @@ public class FirstFloor : MonoBehaviour
                 }
 
                 // Step3. Cube3をCube0の上に移動させる
-                else if(check == 3 && StartClicked)
+                else if(check == 2 && StartClicked)
                 {
                     // 1. Cube3の移動後の座標と角度を計算
                     if(phase == 0)

@@ -206,18 +206,7 @@ public class NewCon : MonoBehaviour
                             R = new Vector2((int)(x2 + 0.8f * Mathf.Abs(d) * Mathf.Cos(angleRadians)), (int)(y2 + 0.8f * Mathf.Abs(d) * Mathf.Sin(angleRadians)));
 
                             phase += 1;
-                            // theta1, alpha, theta2, beta, x1, x2, y1, y2を表示
-                            Debug.Log("theta1: " + theta1);
-                            Debug.Log("alpha: " + alpha);
-                            Debug.Log("theta2: " + theta2);
-                            Debug.Log("beta: " + beta);
-                            Debug.Log("x1: " + x1);
-                            Debug.Log("x2: " + x2);
-                            Debug.Log("y1: " + y1);
-                            Debug.Log("y2: " + y2);
-
-                            Debug.Log("分子: " + numerator);
-                            Debug.Log("分母: " + denominator);
+                           
                             Debug.Log("d: " + d);
                             Debug.Log("R:( " + R.x + ", " + R.y + ")");
                             Debug.Log("phase3");
@@ -226,8 +215,8 @@ public class NewCon : MonoBehaviour
 
                     else if(phase == 4)
                     {
-                        // 3-2-3. |d|<3なら，次のphaseへ進む．そうでなければ，以下の処理を行う．
-                        if(Mathf.Abs(d) < 3)
+                        // 3-2-3. |d|<2なら，次のphaseへ進む．そうでなければ，以下の処理を行う．
+                        if(Mathf.Abs(d) < 2)
                         {
                             phase = 8;
                             Debug.Log("phase4");
@@ -243,7 +232,6 @@ public class NewCon : MonoBehaviour
                         {            
                             // 3-2-4. CubeRightをgammaまで回転させる
                             int angle_diff = gamma - navigator.cube.angle;
-                            Debug.Log("angle_diff: " + angle_diff);
                             if(Math.Abs(angle_diff) < 5)
                             {
                                 phase += 1;
@@ -434,18 +422,7 @@ public class NewCon : MonoBehaviour
                             R = new Vector2((int)(x2 + 0.8f * Mathf.Abs(d) * Mathf.Cos(angleRadians)), (int)(y2 + 0.8f * Mathf.Abs(d) * Mathf.Sin(angleRadians)));
 
                             phase += 1;
-                            // theta1, alpha, theta2, beta, x1, x2, y1, y2を表示
-                            Debug.Log("theta1: " + theta1);
-                            Debug.Log("alpha: " + alpha);
-                            Debug.Log("theta2: " + theta2);
-                            Debug.Log("beta: " + beta);
-                            Debug.Log("x1: " + x1);
-                            Debug.Log("x2: " + x2);
-                            Debug.Log("y1: " + y1);
-                            Debug.Log("y2: " + y2);
-
-                            Debug.Log("分子: " + numerator);
-                            Debug.Log("分母: " + denominator);
+                            
                             Debug.Log("d: " + d);
                             Debug.Log("R:( " + R.x + ", " + R.y + ")");
                             Debug.Log("phase3");
@@ -454,8 +431,8 @@ public class NewCon : MonoBehaviour
 
                     else if(phase == 4)
                     {
-                        // 3-2-3. |d|<3なら，次のphaseへ進む．そうでなければ，以下の処理を行う．
-                        if(Mathf.Abs(d) < 3)
+                        // 3-2-3. |d|<2なら，次のphaseへ進む．そうでなければ，以下の処理を行う．
+                        if(Mathf.Abs(d) < 2)
                         {
                             phase = 8;
                             Debug.Log("phase4");
@@ -471,7 +448,6 @@ public class NewCon : MonoBehaviour
                         {            
                             // 3-2-4. CubeRightをgammaまで回転させる
                             int angle_diff = gamma - navigator.cube.angle;
-                            Debug.Log("angle_diff: " + angle_diff);
                             if(Math.Abs(angle_diff) < 5)
                             {
                                 phase += 1;
