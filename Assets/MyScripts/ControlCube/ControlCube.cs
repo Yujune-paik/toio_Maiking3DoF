@@ -13,21 +13,23 @@ public class ControlCube : MonoBehaviour
 
     CubeManager cubeManager; // キューブマネージャ
 
+    int connectNum = 3; // 接続台数
+
     // CSVファイルの読み込み
-    Dictionary<int, string> toio_dict = new Dictionary<int, string>();
-
-    // キューブ複数台接続
-    public int connectNum = 8; // 接続数
-
+    Dictionary<int, string> toio_dict = new Dictionary<int, string>(); // Cubeの番号とIDの対応付け
+    Dictionary<int, Vector2> toio_pos = new Dictionary<int, Vector2>(); // Cubeの番号と座標の対応付け
+    
     async void Start()
     {
+        // Cubeの番号とIDの対応付け, Cubeの番号と座標の対応付け
         using (var sr = new StreamReader("Assets/toio_number.csv"))
         {
             while (!sr.EndOfStream)
             {
                 var line = sr.ReadLine();
                 var values = line.Split(',');
-                toio_dict.Add(int.Parse(values[0]), values[1]);
+                toio_dict.Add(int.Parse(values[0]), values[1]); // Cubeの番号とIDの対応付け
+                toio_pos.Add(int.Parse(values[0]), new Vector2(int.Parse(values[2]), int.Parse(values[3]))); // Cubeの番号と座標の対応付け
             }
         }
 
@@ -65,11 +67,54 @@ public class ControlCube : MonoBehaviour
             }
         }
 
+        foreach(var navigator in cubeManager.syncNavigators)
+        {
+            if(navigator.cube.id == toio_dict[3])
+            {
+                float distance = Vector2.Distance(navigator.cube.pos, toio_pos[1]);
+                if(distance < 3)
+                {
+                    navigator.handle.Stop();
+                    Debug.Log("toio_dict[3]とtoio_pos[1]の距離が3以下になったよ");
+                }
+                else
+                {
+                    navigator.handle.Move(-20, 0, 20);
+                }
+            }
+        }
+
         // キューブのXY座標表示
         string text = "";
         foreach (var cube in cubeManager.syncCubes)
         {
-            text += "(" + cube.x + "," + cube.y + ")\n";
+            text += "toio_dict[3]:(" + cube.x + "," + cube.y + "," + cube.angle + ") \n";
+
+            // toio_dict[3]とtoio_pos[0]の距離を表示する
+            if(cube.id == toio_dict[3]){
+                float distance = Vector2.Distance(cube.pos, toio_pos[0]);
+                text += "distance(toio_pos[0]): " + distance + "\n";
+            }
+
+            // toio_dict[3]とtoio_pos[1]の距離を表示する
+            if(cube.id == toio_dict[3]){
+                float distance = Vector2.Distance(cube.pos, toio_pos[1]);
+                text += "distance(toio_pos[1]): " + distance + "\n";
+            }
+
+            // toio_dict[3]とtoio_pos[2]の距離を表示する
+            if(cube.id == toio_dict[3]){
+                float distance = Vector2.Distance(cube.pos, toio_pos[2]);
+                text += "distance(toio_pos[2]): " + distance + "\n";
+            }
+
+            if(cube.id == toio_dict[1]){
+                Debug.Log("toio_dict[1]と接続したよ");
+            }
+
+            else if(cube.id == toio_dict[4]){
+                Debug.Log("toio_dict[4]と接続したよ");
+            }
         }
         if (text != "") this.label.text = text;
     }
