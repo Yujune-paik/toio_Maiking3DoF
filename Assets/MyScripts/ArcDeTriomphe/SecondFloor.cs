@@ -25,11 +25,12 @@ public class SecondFloor : MonoBehaviour
     public ConnectType connectType = ConnectType.Simulator;
 
     int phase = 0;
-    int check = 0;
+    int check = 1;
 
     bool isCoroutineRunning = false;
 
     int L = 50; // Cube同士の接続に用いる距離
+    int L_Cube = 30; //Cubeの幅
     int L_Slope = 70; // Slopeの前にCubeが配置するときに用いる距離
 
     int connectNum = 4;
@@ -108,7 +109,7 @@ public class SecondFloor : MonoBehaviour
         {
             foreach(var navigator in cm.syncNavigators)
             {
-                // toio_dict[0](構成要素)とtoio_dict[7](Slope)をくっつける
+                // Step3. toio_dict[0](構成要素)とtoio_dict[7](Slope)をくっつける
                 if(check == 0 & StartClicked)
                 {
                     if(phase == 0)
@@ -116,13 +117,13 @@ public class SecondFloor : MonoBehaviour
                         int x = int.Parse(InputFieldX.text);
                         int y = int.Parse(InputFieldY.text);
                         int angle = int.Parse(InputFieldAngle.text);
-                        if(navigator.cube.id == toio_dict[7] && navigator.cube.x != 0 && navigator.cube.y != 0)
-                        {
+                        // if(navigator.cube.id == toio_dict[7] && navigator.cube.x != 0 && navigator.cube.y != 0)
+                        // {
                             PosCube7 = CalculateNewPosition(new Vector2(x, y), angle+180, L);
                             AngleCube7 = angle+180;
                             Debug.Log("PosCube7: " + PosCube7.x + ", " + PosCube7.y + ", " + AngleCube7);
                             phase += 1;
-                        }
+                        // }
                     }
                     else if(phase == 1)
                     {
@@ -156,24 +157,28 @@ public class SecondFloor : MonoBehaviour
                     }
                 }
                 
+                // Step4. toio_dict[5](構成要素)をtoio_dict[2]の上に運ぶ
                 // toio_dict[5](構成要素)とtoio_dict[6](Press)をtoio_dict[7](Slope)の前まで移動
                 // toio_dict[5](構成要素)をtoio_dict[7](Slope)の上に移動
                 // toio_dict[6](Press)は前進
                 else if(check == 1)
-                {
-                    // toio_dict[5](構成要素)とtoio_dict[6](Press)の移動先の座標と角度を計算
-                    if(navigator.cube.id == toio_dict[7] && navigator.cube.x != 0 && navigator.cube.y != 0)
+                {   
+                    // 1. toio_dict[5](構成要素)とtoio_dict[6](Press)の移動先の座標と角度を計算
+                    if(phase == 0)
                     {
-                        PosCube5 = CalculateNewPosition(navigator.cube.pos, navigator.cube.angle, L_Slope);
-                        AngleCube5 = navigator.cube.angle;
-                        PosCube6 = CalculateNewPosition(navigator.cube.pos, navigator.cube.angle, L_Slope + L);
-                        AngleCube6 = navigator.cube.angle;
-                        Debug.Log("PosCube5: " + PosCube5.x + ", " + PosCube5.y + ", " + AngleCube5);
-                        Debug.Log("PosCube6: " + PosCube6.x + ", " + PosCube6.y + ", " + AngleCube6);
-                        phase += 1;
+                        if(navigator.cube.id == toio_dict[7] && navigator.cube.x != 0 && navigator.cube.y != 0)
+                        {
+                            PosCube5 = CalculateNewPosition(navigator.cube.pos, navigator.cube.angle, L_Slope);
+                            AngleCube5 = navigator.cube.angle;
+                            PosCube6 = CalculateNewPosition(navigator.cube.pos, navigator.cube.angle, L_Slope + L);
+                            AngleCube6 = navigator.cube.angle;
+                            Debug.Log("PosCube5: " + PosCube5.x + ", " + PosCube5.y + ", " + AngleCube5);
+                            Debug.Log("PosCube6: " + PosCube6.x + ", " + PosCube6.y + ", " + AngleCube6);
+                            phase += 1;
+                        }
                     }
 
-                    // toio_dict[5](構成要素)を移動(座標)
+                    // 2. toio_dict[5](構成要素)を移動(座標)
                     else if(phase == 1)
                     {
                         if(navigator.cube.id == toio_dict[5])
@@ -183,6 +188,20 @@ public class SecondFloor : MonoBehaviour
                             {
                                 phase += 1;
                                 Debug.Log("phase1");
+                            }
+                        }
+                    }
+
+                    // 3. toio_dict[5](構成要素)を移動(角度)
+                    else if(phase == 2)
+                    {
+                        if(navigator.cube.id == toio_dict[5])
+                        {
+                            Movement mv = navigator.handle.Rotate2Deg(AngleCube5, rotateTime:2500, tolerance:0.1).Exec();
+                            if(mv.reached)
+                            {
+                                phase += 1;
+                                Debug.Log("phase3");
                             }
                         }
                     }
@@ -201,19 +220,7 @@ public class SecondFloor : MonoBehaviour
                         }
                     }
                     
-                    // toio_dict[5](構成要素)を移動(角度)
-                    else if(phase == 3)
-                    {
-                        if(navigator.cube.id == toio_dict[5])
-                        {
-                            Movement mv = navigator.handle.Rotate2Deg(AngleCube5, rotateTime:2500, tolerance:0.1).Exec();
-                            if(mv.reached)
-                            {
-                                phase += 1;
-                                Debug.Log("phase3");
-                            }
-                        }
-                    }
+                    // 
 
                     // toio_dict[6](Press)を移動(角度)
                     else if(phase == 4)
@@ -294,6 +301,7 @@ public class SecondFloor : MonoBehaviour
                     }
                 }
 
+                // Step5. toio_dict[4]をtoio_dict[1]の上に移動
                 // toio_dict[4](構成要素)とtoio_dict[6](Press)をtoio_dict[7](Slope)の前まで移動
                 // toio_dict[4](構成要素)をtoio_dict[7](Slope)の上に移動
                 // toio_dict[6](Press)は前進
@@ -511,6 +519,4 @@ public class SecondFloor : MonoBehaviour
         phase++;
         isCoroutineRunning = false;
     }
-
-    // 
 }

@@ -27,7 +27,7 @@ public class FirstFloor : MonoBehaviour
     int check = 0;
     bool s = false;
 
-    bool isCoroutineRunning = false;
+    // bool isCoroutineRunning = false;
 
     int L = 50; // Cube同士の接続に用いる距離
     int L_Cube = 30; // Cubeの大きさ
@@ -566,7 +566,7 @@ public class FirstFloor : MonoBehaviour
                     }
                 }
 
-                // Step3. Cube3をCube0の上に移動させる
+                // Step6. Cube3をCube0の上に移動させる
                 else if(check == 2 && StartClicked)
                 {
                     // 1. Cube3の移動後の座標と角度を計算
@@ -602,7 +602,7 @@ public class FirstFloor : MonoBehaviour
                         }
                     }
 
-                    // 3. Cube3を1で求めた角度まで回転s
+                    // 3. Cube3を1で求めた角度まで回転
                     else if(phase == 2)
                     {
                         if(navigator.cube.id == toio_dict[3])
@@ -712,15 +712,15 @@ public class FirstFloor : MonoBehaviour
         return new Vector2((int)x, (int)y);
     }
 
-    // 一定時間ごとにphaseをインクリメントする
-    // 使用するときは，StartCoroutine(WaitAndIncrementPhase(秒数(s)f));
-    IEnumerator WaitAndIncrementPhase(float waitTime)
-    {
-        isCoroutineRunning = true;
-        yield return new WaitForSeconds(waitTime);
-        phase++;
-        isCoroutineRunning = false;
-    }
+    // // 一定時間ごとにphaseをインクリメントする
+    // // 使用するときは，StartCoroutine(WaitAndIncrementPhase(秒数(s)f));
+    // IEnumerator WaitAndIncrementPhase(float waitTime)
+    // {
+    //     isCoroutineRunning = true;
+    //     yield return new WaitForSeconds(waitTime);
+    //     phase++;
+    //     isCoroutineRunning = false;
+    // }
 
     // 「cebe.id → Cubeの番号」 へ変換する関数
     int GetCubeId(string cubeId)
