@@ -25,7 +25,7 @@ public class NewSecondFloor : MonoBehaviour
     public ConnectType connectType = ConnectType.Simulator;
 
     int phase = 0;
-    int check = 1;
+    int check = 0;
     bool s = false;
 
     bool isCoroutineRunning = false;
@@ -81,10 +81,10 @@ public class NewSecondFloor : MonoBehaviour
     // **************************
 
     // Slopeの登り始めの座標
-    Vector2 PosSlopeStart = new Vector2(242, 313);
+    Vector2 PosSlopeStart = new Vector2(255, 150);
 
     // Slopeの登り切った平らなところの座標
-    Vector2 PosFlat = new Vector2(242, 342);
+    Vector2 PosFlat = new Vector2(255, 185);
 
     float timeSinceLastOrder = 0f;
     float orderInterval = 0.1f;
@@ -168,7 +168,7 @@ public class NewSecondFloor : MonoBehaviour
                     {
                         if(navigator.cube.id == toio_dict[7])
                         {
-                            var mv = navigator.Navi2Target(PosCube7.x, PosCube7.y, maxSpd:5).Exec();
+                            var mv = navigator.Navi2Target(PosCube7.x, PosCube7.y, maxSpd:10).Exec();
                             if(mv.reached)
                             {
                                 phase += 1;
@@ -183,8 +183,10 @@ public class NewSecondFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[7])
                         {
                             int angle_diff = AngleCube7 - navigator.cube.angle;
-                            if(Math.Abs(angle_diff) < 3)
+                            Debug.Log("angle_diff:" + angle_diff);
+                            if(Math.Abs(angle_diff) <= 5)
                             {
+                                navigator.handle.Stop();
                                 phase += 1;
                                 Debug.Log("phase2");
                             }
@@ -269,6 +271,7 @@ public class NewSecondFloor : MonoBehaviour
                             int angle_diff = gamma - navigator.cube.angle;
                             if(Math.Abs(angle_diff) < 5)
                             {
+                                navigator.handle.Stop();
                                 phase += 1;
                                 Debug.Log("phase5");
                             }
@@ -332,7 +335,7 @@ public class NewSecondFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[7])
                         {
                             float distance = Vector2.Distance(new Vector2(navigator.cube.x, navigator.cube.y), PosCube0);
-                            if(distance < 28)
+                            if(distance < 30)
                             {
                                 navigator.handle.Stop();
                                 phase += 1;
@@ -788,7 +791,7 @@ public class NewSecondFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[5])
                         {
                             float distance = Vector2.Distance(navigator.cube.pos, PosFlat);
-                            if(distance < 5)
+                            if(distance < 13)
                             {
                                 navigator.handle.Stop();
                                 phase += 1;
@@ -796,7 +799,7 @@ public class NewSecondFloor : MonoBehaviour
                             }
                             else
                             {
-                                navigator.handle.Move(-30, 0, 30);
+                                navigator.handle.Move(-50, 0, 50);
                             }
                         }
                     }
@@ -826,7 +829,7 @@ public class NewSecondFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[5])
                         {
                             int angle_diff = 180 - navigator.cube.angle;
-                            if(Math.Abs(angle_diff) < 3)
+                            if(Math.Abs(angle_diff) < 2)
                             {
                                 navigator.handle.Stop();
                                 phase += 1;
@@ -869,7 +872,7 @@ public class NewSecondFloor : MonoBehaviour
                         {
                             int angle_diff = 90 - navigator.cube.angle;
                             Debug.Log("angle_diff: " + angle_diff);
-                            if(Math.Abs(angle_diff) < 3)
+                            if(Math.Abs(angle_diff) < 2)
                             {
                                 navigator.handle.Stop();
                                 phase += 1;
@@ -878,11 +881,11 @@ public class NewSecondFloor : MonoBehaviour
                             }
                             else if(angle_diff > 0)
                             {
-                                navigator.handle.Move(0, 20, 20);
+                                navigator.handle.Move(0, 30, 30);
                             }
                             else
                             {
-                                navigator.handle.Move(0, -20, -20);
+                                navigator.handle.Move(0, -30, -30);
                             }
                         }
                     }
@@ -906,32 +909,32 @@ public class NewSecondFloor : MonoBehaviour
                         }
                     }
 
-                    // 6-2. Cube5(=toio_dict[5])を指定した角度まで回転
-                    else if(phase == 8)
-                    {
-                        if(navigator.cube.id == toio_dict[5])
-                        {
-                            int angle_diff = 180 - navigator.cube.angle;
-                            if(Math.Abs(angle_diff) < 3)
-                            {
-                                navigator.handle.Stop();
-                                phase += 1;
-                                Debug.Log("phase8");
+                    // // 6-2. Cube5(=toio_dict[5])を指定した角度まで回転
+                    // else if(phase == 8)
+                    // {
+                    //     if(navigator.cube.id == toio_dict[5])
+                    //     {
+                    //         int angle_diff = 180 - navigator.cube.angle;
+                    //         if(Math.Abs(angle_diff) < 2)
+                    //         {
+                    //             navigator.handle.Stop();
+                    //             phase += 1;
+                    //             Debug.Log("phase8");
 
-                            }
-                            else if(angle_diff > 0)
-                            {
-                                navigator.handle.Move(0, 20, 20);
-                            }
-                            else
-                            {
-                                navigator.handle.Move(0, -20, 20);
-                            }
-                        }
-                    }
+                    //         }
+                    //         else if(angle_diff > 0)
+                    //         {
+                    //             navigator.handle.Move(0, 30, 30);
+                    //         }
+                    //         else
+                    //         {
+                    //             navigator.handle.Move(0, -30, 30);
+                    //         }
+                    //     }
+                    // }
                     
                     // 7. phaseをリセットし，checkをインクリメント
-                    else if(phase > 8)
+                    else if(phase > 7)
                     {
                         phase = 0;
                         check += 1;
@@ -978,7 +981,7 @@ public class NewSecondFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[4])
                         {
                             int angle_diff = AngleCube4 - navigator.cube.angle;
-                            if(Math.Abs(angle_diff) < 3)
+                            if(Math.Abs(angle_diff) < 2)
                             {
                                 navigator.handle.Stop();
                                 phase += 1;
@@ -1335,7 +1338,7 @@ public class NewSecondFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[4])
                         {
                             float distance = Vector2.Distance(navigator.cube.pos, PosSlopeStart);
-                            if(distance < 5)
+                            if(distance < 3)
                             {
                                 navigator.handle.Stop();
                                 phase += 1;
@@ -1343,7 +1346,7 @@ public class NewSecondFloor : MonoBehaviour
                             }
                             else
                             {
-                                navigator.handle.Move(-30, 0, 30);
+                                navigator.handle.Move(-100, 0, 100);
                             }
                         }
 
@@ -1374,7 +1377,7 @@ public class NewSecondFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[4])
                         {
                             float distance = Vector2.Distance(navigator.cube.pos, PosFlat);
-                            if(distance < 5)
+                            if(distance < 13)
                             {
                                 navigator.handle.Stop();
                                 phase += 1;
@@ -1382,7 +1385,7 @@ public class NewSecondFloor : MonoBehaviour
                             }
                             else
                             {
-                                navigator.handle.Move(-30, 0, 30);
+                                navigator.handle.Move(-50, 0, 50);
                             }
                         }
                     }
@@ -1412,7 +1415,7 @@ public class NewSecondFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[4])
                         {
                             int angle_diff = 180 - navigator.cube.angle;
-                            if(Math.Abs(angle_diff) < 3)
+                            if(Math.Abs(angle_diff) < 2)
                             {
                                 navigator.handle.Stop();
                                 phase += 1;
@@ -1420,11 +1423,11 @@ public class NewSecondFloor : MonoBehaviour
                             }
                             else if(angle_diff > 0)
                             {
-                                navigator.handle.Move(0, 20, 20);
+                                navigator.handle.Move(0, 30, 30);
                             }
                             else
                             {
-                                navigator.handle.Move(0, -20, 20);
+                                navigator.handle.Move(0, -30, 30);
                             }
                         }
                     }
@@ -1435,7 +1438,7 @@ public class NewSecondFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[4])
                         {
                             float distance = Vector2.Distance(navigator.cube.pos, toio_pos[1]);
-                            if(distance < 3)
+                            if(distance < 5)
                             {   
                                 navigator.handle.Stop();
                                 phase += 1;
@@ -1877,7 +1880,7 @@ public class NewSecondFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[3])
                         {
                             float distance = Vector2.Distance(navigator.cube.pos, PosSlopeStart);
-                            if(distance < 5)
+                            if(distance < 3)
                             {
                                 navigator.handle.Stop();
                                 phase += 1;
@@ -1885,7 +1888,7 @@ public class NewSecondFloor : MonoBehaviour
                             }
                             else
                             {
-                                navigator.handle.Move(-30, 0, 30);
+                                navigator.handle.Move(-70, 0, 70);
                             }
                         }
 
@@ -1916,7 +1919,7 @@ public class NewSecondFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[3])
                         {
                             float distance = Vector2.Distance(navigator.cube.pos, PosFlat);
-                            if(distance < 5)
+                            if(distance < 13)
                             {
                                 navigator.handle.Stop();
                                 phase += 1;
@@ -1924,7 +1927,7 @@ public class NewSecondFloor : MonoBehaviour
                             }
                             else
                             {
-                                navigator.handle.Move(-30, 0, 30);
+                                navigator.handle.Move(-50, 0, 50);
                             }
                         }
                     }
@@ -1943,7 +1946,7 @@ public class NewSecondFloor : MonoBehaviour
                             }
                             else
                             {
-                                navigator.handle.Move(-30, 0, 40);
+                                navigator.handle.Move(-20, 0, 20);
                             }
                         }
                     }

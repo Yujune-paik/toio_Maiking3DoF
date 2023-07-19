@@ -13,7 +13,7 @@ public class ControlCube : MonoBehaviour
 
     CubeManager cubeManager; // キューブマネージャ
 
-    int connectNum = 3; // 接続台数
+    int connectNum = 4; // 接続台数
 
     // CSVファイルの読み込み
     Dictionary<int, string> toio_dict = new Dictionary<int, string>(); // Cubeの番号とIDの対応付け
@@ -43,7 +43,7 @@ public class ControlCube : MonoBehaviour
     {
         foreach (var cube in cubeManager.syncCubes)
         {   
-            if(cube.id == toio_dict[7] || cube.id == toio_dict[1]){
+            if(cube.id == toio_dict[6] || cube.id == toio_dict[3]){
                 if (Input.GetKey(KeyCode.LeftArrow)) {
                     cube.Move(-20, 20, 50);
                 } else if (Input.GetKey(KeyCode.RightArrow)) {
@@ -54,7 +54,7 @@ public class ControlCube : MonoBehaviour
                     cube.Move(-50, -50, 50);
                 }
             }
-            else if(cube.id == toio_dict[5]){
+            else if(cube.id == toio_dict[2] || cube.id == toio_dict[4]){
                 if (Input.GetKey(KeyCode.LeftArrow)) {
                     cube.Move(-20, 20, 50);
                 } else if (Input.GetKey(KeyCode.RightArrow)) {
@@ -69,19 +69,19 @@ public class ControlCube : MonoBehaviour
 
         foreach(var navigator in cubeManager.syncNavigators)
         {
-            if(navigator.cube.id == toio_dict[3])
-            {
-                float distance = Vector2.Distance(navigator.cube.pos, toio_pos[1]);
-                if(distance < 3)
-                {
-                    navigator.handle.Stop();
-                    Debug.Log("toio_dict[3]とtoio_pos[1]の距離が3以下になったよ");
-                }
-                else
-                {
-                    navigator.handle.Move(-20, 0, 20);
-                }
-            }
+            // if(navigator.cube.id == toio_dict[3])
+            // {
+            //     float distance = Vector2.Distance(navigator.cube.pos, toio_pos[1]);
+            //     if(distance < 3)
+            //     {
+            //         navigator.handle.Stop();
+            //         Debug.Log("toio_dict[3]とtoio_pos[1]の距離が3以下になったよ");
+            //     }
+            //     else
+            //     {
+            //         navigator.handle.Move(-20, 0, 20);
+            //     }
+            // }
         }
 
         // キューブのXY座標表示

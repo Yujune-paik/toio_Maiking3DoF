@@ -19,7 +19,6 @@ public class ConnectingSlope : MonoBehaviour
     public Button StartButton;
 
     bool StartClicked = false;
-    bool StartCheck3 = false;
 
     CubeManager cm;
     public ConnectType connectType = ConnectType.Simulator;
@@ -28,33 +27,14 @@ public class ConnectingSlope : MonoBehaviour
     int check = 0;
     bool s = false;
 
-    bool isCoroutineRunning = false;
-
     int L = 60; // Cube同士の接続に用いる距離
     int L_Cube = 30; //Cubeの幅
-    int L_Slope = 60; // Slopeの前にCubeが配置するときに用いる距離
 
-    int connectNum = 5;
+    int connectNum = 1;
 
     // toio_dict[0]の位置と角度
     Vector2 PosCube0 = new Vector2(0, 0);
     int AngleCube0 = 0;
-
-    // toio_dict[3]の位置と角度
-    Vector2 PosCube3 = new Vector2(0, 0);
-    int AngleCube3 = 0;
-
-    // toio_dict[4]の位置と角度
-    Vector2 PosCube4 = new Vector2(0, 0);
-    int AngleCube4 = 0;
-
-    // toio_dict[5]の位置と角度
-    Vector2 PosCube5 = new Vector2(0, 0);
-    int AngleCube5 = 0;
-
-    // toio_dict[6]の位置と角度
-    Vector2 PosCube6 = new Vector2(0, 0);
-    int AngleCube6 = 0;
 
     // toio_dict[7]の位置と角度
     Vector2 PosCube7 = new Vector2(0, 0);
@@ -168,7 +148,7 @@ public class ConnectingSlope : MonoBehaviour
                     {
                         if(navigator.cube.id == toio_dict[7])
                         {
-                            var mv = navigator.Navi2Target(PosCube7.x, PosCube7.y, maxSpd:5).Exec();
+                            var mv = navigator.Navi2Target(PosCube7.x, PosCube7.y, maxSpd:10).Exec();
                             if(mv.reached)
                             {
                                 phase += 1;
@@ -332,7 +312,7 @@ public class ConnectingSlope : MonoBehaviour
                         if(navigator.cube.id == toio_dict[7])
                         {
                             float distance = Vector2.Distance(new Vector2(navigator.cube.x, navigator.cube.y), PosCube0);
-                            if(distance < 28)
+                            if(distance < 30)
                             {
                                 navigator.handle.Stop();
                                 phase += 1;
@@ -355,7 +335,20 @@ public class ConnectingSlope : MonoBehaviour
                 }
             }
         }
-    }
+
+        string text = "";
+        foreach(var cube in cm.syncCubes)
+        {
+            if(cube.id == toio_dict[7])
+            {
+                // PosCube0との距離を計算し，表示する
+                float distance = Vector2.Distance(cube.pos, PosCube0);
+                text += "distance: " + distance + "\n";
+            }
+        }
+
+        if(text != "") this.label.text = text;
+    }    
 
     // Startボタンが押されたら，StartClickedをtrueにする
     void StartButtonClicked()
@@ -370,15 +363,5 @@ public class ConnectingSlope : MonoBehaviour
         float y = pos.y + distance * Mathf.Sin(angleRadians);
 
         return new Vector2((int)x, (int)y);
-    }
-
-    // 一定時間ごとにphaseをインクリメントする
-    // 使用するときは，StartCoroutine(WaitAndIncrementPhase(秒数(s)f));
-    IEnumerator WaitAndIncrementPhase(float waitTime)
-    {
-        isCoroutineRunning = true;
-        yield return new WaitForSeconds(waitTime);
-        phase++;
-        isCoroutineRunning = false;
     }
 }

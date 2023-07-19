@@ -8,7 +8,7 @@ using toio;
 using System.Threading.Tasks;
 
 // 1層目を作るプログラム
-// 接続するtoio： 0, 1, 2, 3
+// 接続するtoio： 0, 1, 2
 
 public class FirstFloor : MonoBehaviour
 {
@@ -17,8 +17,6 @@ public class FirstFloor : MonoBehaviour
     public InputField InputFieldY;
     public InputField InputFieldAngle;
     public Button StartButton;
-
-    bool StartClicked = false;
 
     CubeManager cm;
     public ConnectType connectType = ConnectType.Simulator;
@@ -29,9 +27,8 @@ public class FirstFloor : MonoBehaviour
 
     // bool isCoroutineRunning = false;
 
-    int L = 50; // Cube同士の接続に用いる距離
+    int L = 45; // Cube同士の接続に用いる距離
     int L_Cube = 30; // Cubeの大きさ
-    int L_Slope = 70; // Slopeの前にCubeが配置するときに用いる距離
 
     int connectNum = 3;
 
@@ -48,14 +45,11 @@ public class FirstFloor : MonoBehaviour
     Vector2 PosCube1 = new Vector2(0, 0);
     Vector2 PosCube2 = new Vector2(0, 0);
     Vector2 PosCube3 = new Vector2(0, 0);
-    Vector2 PosCube7 = new Vector2(0, 0);
 
     // toioの角度
     int AngleCube0 = 0;
     int AngleCube1 = 0;
     int AngleCube2 = 0;
-    int AngleCube3 = 0;
-    int AngleCube7 = 0;
 
     // **************************
     // phase==3で使用する変数
@@ -104,8 +98,6 @@ public class FirstFloor : MonoBehaviour
         cm = new CubeManager(connectType);
         // キューブの複数台接続
         await ConnectToioCubes();
-
-        StartButton.onClick.AddListener(StartButtonClicked);
     }
 
     async Task ConnectToioCubes()
@@ -173,6 +165,10 @@ public class FirstFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[FirstRight])
                         {
                             int angle_diff = AngleCube0 - navigator.cube.angle;
+                            Debug.Log("anglediff: " + angle_diff);
+                            if (angle_diff > 360) angle_diff -= 360;
+                            else if (angle_diff < 0) angle_diff += 360;
+
                             if(Math.Abs(angle_diff) < 3)
                             {
                                 phase += 1;
@@ -261,6 +257,9 @@ public class FirstFloor : MonoBehaviour
                             // 3-2-4. FirstRightをgammaまで回転させる
                             int angle_diff = gamma - navigator.cube.angle;
                             Debug.Log("angle_diff: " + angle_diff);
+                            if (angle_diff > 360) angle_diff -= 360;
+                            else if (angle_diff < 0) angle_diff += 360;
+
                             if(Math.Abs(angle_diff) < 5)
                             {
                                 phase += 1;
@@ -282,7 +281,7 @@ public class FirstFloor : MonoBehaviour
                         {
                             // 3-2-5. FirstRightをRまで移動させる
                             var distance = Vector2.Distance(new Vector2(navigator.cube.x, navigator.cube.y), R);
-                            if(distance < 5)
+                            if(distance < 3)
                             {
                                 phase += 1;
                                 Debug.Log("phase6");
@@ -299,6 +298,10 @@ public class FirstFloor : MonoBehaviour
                         {
                             // 3-2-6. FirstRightをAngleCube0まで回転させる
                             int angle_diff = AngleCube0 - navigator.cube.angle;
+
+                            if (angle_diff > 360) angle_diff -= 360;
+                            else if (angle_diff < 0) angle_diff += 360;
+
                             if(Math.Abs(angle_diff) < 3)
                             {
                                 phase =3;
@@ -324,7 +327,7 @@ public class FirstFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[FirstRight])
                         {
                             float distance = Vector2.Distance(new Vector2(navigator.cube.x, navigator.cube.y), PosCube1);
-                            if(distance < 28)
+                            if(distance < 31)
                             {
                                 phase += 1;
                                 Debug.Log("phase8");
@@ -382,6 +385,9 @@ public class FirstFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[SecondRight])
                         {
                             int angle_diff = AngleCube2 - navigator.cube.angle;
+
+                            if (angle_diff > 360) angle_diff -= 360;
+                            else if (angle_diff < 0) angle_diff += 360;
                             if(Math.Abs(angle_diff) < 3)
                             {
                                 phase += 1;
@@ -389,11 +395,11 @@ public class FirstFloor : MonoBehaviour
                             }
                             else if(angle_diff > 0)
                             {
-                                navigator.handle.Move(0, 10, 20);
+                                navigator.handle.Move(0, 20, 20);
                             }
                             else
                             {
-                                navigator.handle.Move(0, -10, 20);
+                                navigator.handle.Move(0, -20, 20);
                             }
                         }
                     }
@@ -480,6 +486,9 @@ public class FirstFloor : MonoBehaviour
                         {            
                             // 3-2-4. SecondRightをgammaまで回転させる
                             int angle_diff = gamma - navigator.cube.angle;
+
+                            if (angle_diff > 360) angle_diff -= 360;
+                            else if (angle_diff < 0) angle_diff += 360;
                             Debug.Log("angle_diff: " + angle_diff);
                             if(Math.Abs(angle_diff) < 5)
                             {
@@ -519,6 +528,10 @@ public class FirstFloor : MonoBehaviour
                         {
                             // 3-2-6. SecondRightをAngleCube2まで回転させる
                             int angle_diff = AngleCube2 - navigator.cube.angle;
+
+                            if (angle_diff > 360) angle_diff -= 360;
+                            else if (angle_diff < 0) angle_diff += 360;
+
                             if(Math.Abs(angle_diff) < 3)
                             {
                                 phase =3;
@@ -544,7 +557,7 @@ public class FirstFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[SecondRight])
                         {
                             float distance = Vector2.Distance(new Vector2(navigator.cube.x, navigator.cube.y), PosCube1);
-                            if(distance < 28)
+                            if(distance < 36)
                             {
                                 phase += 1;
                                 Debug.Log("phase8");
@@ -730,11 +743,5 @@ public class FirstFloor : MonoBehaviour
             if(item.Value == cubeId) return item.Key;
         }
         return -1;
-    }
-
-    // Buttonが押されたら，StartClickedをtrueにする
-    void StartButtonClicked()
-    {
-        StartClicked = true;
     }
 }
