@@ -81,7 +81,7 @@ public class NewSecondFloor : MonoBehaviour
     // **************************
 
     // Slopeの登り始めの座標
-    Vector2 PosSlopeStart = new Vector2(255, 150);
+    Vector2 PosSlopeStart = new Vector2(255, 155);
 
     // Slopeの登り切った平らなところの座標
     Vector2 PosFlat = new Vector2(255, 185);
@@ -183,6 +183,9 @@ public class NewSecondFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[7])
                         {
                             int angle_diff = AngleCube7 - navigator.cube.angle;
+                            if(angle_diff > 360) angle_diff -= 360;
+                            else if(angle_diff < -360) angle_diff += 360;
+
                             Debug.Log("angle_diff:" + angle_diff);
                             if(Math.Abs(angle_diff) <= 5)
                             {
@@ -269,6 +272,9 @@ public class NewSecondFloor : MonoBehaviour
                         {            
                             // 3-2-4. Slope(=toio_dict[7])をgammaまで回転させる
                             int angle_diff = gamma - navigator.cube.angle;
+                            if(angle_diff > 360) angle_diff -= 360;
+                            else if(angle_diff < -360) angle_diff += 360;
+
                             if(Math.Abs(angle_diff) < 5)
                             {
                                 navigator.handle.Stop();
@@ -309,7 +315,10 @@ public class NewSecondFloor : MonoBehaviour
                         {
                             // 3-2-6. Slope(=toio_dict[7])をAngleCube7まで回転させる
                             int angle_diff = AngleCube7 - navigator.cube.angle;
-                            if(Math.Abs(angle_diff) < 3)
+                            if(angle_diff > 360) angle_diff -= 360;
+                            else if(angle_diff < -360) angle_diff += 360;
+
+                            if(Math.Abs(angle_diff) < 2)
                             {
                                 navigator.handle.Stop();
                                 phase =3;
@@ -396,6 +405,9 @@ public class NewSecondFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[5])
                         {
                             int angle_diff = AngleCube5 - navigator.cube.angle;
+                            if(angle_diff > 360) angle_diff -= 360;
+                            else if(angle_diff < -360) angle_diff += 360;
+
                             if(Math.Abs(angle_diff) < 3)
                             {
                                 phase += 1;
@@ -480,7 +492,10 @@ public class NewSecondFloor : MonoBehaviour
                         {            
                             // 3-2-4. Cube5(=toio_dict[5])をgammaまで回転させる
                             int angle_diff = gamma - navigator.cube.angle;
-                            if(Math.Abs(angle_diff) < 5)
+                            if(angle_diff > 360) angle_diff -= 360;
+                            else if(angle_diff < -360) angle_diff += 360;
+
+                            if(Math.Abs(angle_diff) <3)
                             {
                                 phase += 1;
                                 Debug.Log("phase5");
@@ -519,6 +534,9 @@ public class NewSecondFloor : MonoBehaviour
                         {
                             // 3-2-6. Cube5(=toio_dict[5])をAngleCube5まで回転させる
                             int angle_diff = AngleCube5 - navigator.cube.angle;
+                            if(angle_diff > 360) angle_diff -= 360;
+                            else if(angle_diff < -360) angle_diff += 360;
+
                             if(Math.Abs(angle_diff) < 3)
                             {
                                 navigator.handle.Stop();
@@ -587,6 +605,9 @@ public class NewSecondFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[6])
                         {
                             int angle_diff = AngleCube6 - navigator.cube.angle;
+                            if(angle_diff > 360) angle_diff -= 360;
+                            else if(angle_diff < -360) angle_diff += 360;
+
                             if(Math.Abs(angle_diff) < 3)
                             {
                                 navigator.handle.Stop();
@@ -658,7 +679,6 @@ public class NewSecondFloor : MonoBehaviour
                         // 3-2-3. |d|<5なら，次のphaseへ進む．そうでなければ，以下の処理を行う．
                         if(Mathf.Abs(d) < 5)
                         {
-                            navigator.handle.Stop();
                             phase = 8;
                             Debug.Log("phase4");
                         }
@@ -673,6 +693,9 @@ public class NewSecondFloor : MonoBehaviour
                         {            
                             // 3-2-4. Press(=toio_dict[6])をgammaまで回転させる
                             int angle_diff = gamma - navigator.cube.angle;
+                            if(angle_diff > 360) angle_diff -= 360;
+                            else if(angle_diff < -360) angle_diff += 360;
+
                             if(Math.Abs(angle_diff) < 5)
                             {
                                 navigator.handle.Stop();
@@ -713,6 +736,9 @@ public class NewSecondFloor : MonoBehaviour
                         {
                             // 3-2-6. Press(=toio_dict[6])をAngleCube7まで回転させる
                             int angle_diff = AngleCube7 - navigator.cube.angle;
+                            if(angle_diff > 360) angle_diff -= 360;
+                            else if(angle_diff < -360) angle_diff += 360;
+
                             if(Math.Abs(angle_diff) < 3)
                             {
                                 navigator.handle.Stop();
@@ -752,7 +778,7 @@ public class NewSecondFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[5])
                         {
                             float distance = Vector2.Distance(navigator.cube.pos, PosSlopeStart);
-                            if(distance < 5)
+                            if(distance < 7)
                             {
                                 navigator.handle.Stop();
                                 phase += 1;
@@ -760,7 +786,7 @@ public class NewSecondFloor : MonoBehaviour
                             }
                             else
                             {
-                                navigator.handle.Move(-30, 0, 30);
+                                navigator.handle.Move(-70, 0, 70);
                             }
                         }
 
@@ -829,7 +855,10 @@ public class NewSecondFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[5])
                         {
                             int angle_diff = 180 - navigator.cube.angle;
-                            if(Math.Abs(angle_diff) < 2)
+                            if(angle_diff > 360) angle_diff -= 360;
+                            else if(angle_diff < -360) angle_diff += 360;
+
+                            if(Math.Abs(angle_diff) < 10)
                             {
                                 navigator.handle.Stop();
                                 phase += 1;
@@ -837,11 +866,11 @@ public class NewSecondFloor : MonoBehaviour
                             }
                             else if(angle_diff > 0)
                             {
-                                navigator.handle.Move(0, 20, 20);
+                                navigator.handle.Move(0,30, 30);
                             }
                             else
                             {
-                                navigator.handle.Move(0, -20, 20);
+                                navigator.handle.Move(0, -30, 30);
                             }
                         }
                     }
@@ -871,8 +900,11 @@ public class NewSecondFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[5])
                         {
                             int angle_diff = 90 - navigator.cube.angle;
+                            if(angle_diff > 360) angle_diff -= 360;
+                            else if(angle_diff < -360) angle_diff += 360;
+
                             Debug.Log("angle_diff: " + angle_diff);
-                            if(Math.Abs(angle_diff) < 2)
+                            if(Math.Abs(angle_diff) < 10)
                             {
                                 navigator.handle.Stop();
                                 phase += 1;
@@ -981,6 +1013,9 @@ public class NewSecondFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[4])
                         {
                             int angle_diff = AngleCube4 - navigator.cube.angle;
+                            if(angle_diff > 360) angle_diff -= 360;
+                            else if(angle_diff < -360) angle_diff += 360;
+
                             if(Math.Abs(angle_diff) < 2)
                             {
                                 navigator.handle.Stop();
@@ -1066,7 +1101,10 @@ public class NewSecondFloor : MonoBehaviour
                         {            
                             // 3-2-4. Cube4(=toio_dict[4])をgammaまで回転させる
                             int angle_diff = gamma - navigator.cube.angle;
-                            if(Math.Abs(angle_diff) < 5)
+                            if(angle_diff > 360) angle_diff -= 360;
+                            else if(angle_diff < -360) angle_diff += 360;
+
+                            if(Math.Abs(angle_diff) < 3)
                             {
                                 navigator.handle.Stop();
                                 phase += 1;
@@ -1106,6 +1144,9 @@ public class NewSecondFloor : MonoBehaviour
                         {
                             // 3-2-6. Cube4(=toio_dict[4])をAngleCube4まで回転させる
                             int angle_diff = AngleCube4 - navigator.cube.angle;
+                            if(angle_diff > 360) angle_diff -= 360;
+                            else if(angle_diff < -360) angle_diff += 360;
+
                             if(Math.Abs(angle_diff) < 3)
                             {
                                 navigator.handle.Stop();
@@ -1174,6 +1215,9 @@ public class NewSecondFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[6])
                         {
                             int angle_diff = AngleCube6 - navigator.cube.angle;
+                            if(angle_diff > 360) angle_diff -= 360;
+                            else if(angle_diff < -360) angle_diff += 360;
+
                             if(Math.Abs(angle_diff) < 3)
                             {
                                 navigator.handle.Stop();
@@ -1259,6 +1303,9 @@ public class NewSecondFloor : MonoBehaviour
                         {            
                             // 3-2-4. Press(=toio_dict[6])をgammaまで回転させる
                             int angle_diff = gamma - navigator.cube.angle;
+                            if(angle_diff > 360) angle_diff -= 360;
+                            else if(angle_diff < -360) angle_diff += 360;
+
                             if(Math.Abs(angle_diff) < 5)
                             {
                                 navigator.handle.Stop();
@@ -1299,6 +1346,9 @@ public class NewSecondFloor : MonoBehaviour
                         {
                             // 3-2-6. Press(=toio_dict[6])をAngleCube7まで回転させる
                             int angle_diff = AngleCube7 - navigator.cube.angle;
+                            if(angle_diff > 360) angle_diff -= 360;
+                            else if(angle_diff < -360) angle_diff += 360;
+
                             if(Math.Abs(angle_diff) < 3)
                             {
                                 navigator.handle.Stop();
@@ -1338,7 +1388,7 @@ public class NewSecondFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[4])
                         {
                             float distance = Vector2.Distance(navigator.cube.pos, PosSlopeStart);
-                            if(distance < 3)
+                            if(distance < 7)
                             {
                                 navigator.handle.Stop();
                                 phase += 1;
@@ -1346,13 +1396,13 @@ public class NewSecondFloor : MonoBehaviour
                             }
                             else
                             {
-                                navigator.handle.Move(-100, 0, 100);
+                                navigator.handle.Move(-70, 0, 70);
                             }
                         }
 
                         else if(navigator.cube.id == toio_dict[6])
                         {
-                            navigator.handle.Move(-50, 0, 50);
+                            navigator.handle.Move(-60, 0, 60);
                         }
                     }
 
@@ -1415,7 +1465,10 @@ public class NewSecondFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[4])
                         {
                             int angle_diff = 180 - navigator.cube.angle;
-                            if(Math.Abs(angle_diff) < 2)
+                            if(angle_diff > 360) angle_diff -= 360;
+                            else if(angle_diff < -360) angle_diff += 360;
+
+                            if(Math.Abs(angle_diff) < 10)
                             {
                                 navigator.handle.Stop();
                                 phase += 1;
@@ -1523,6 +1576,9 @@ public class NewSecondFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[3])
                         {
                             int angle_diff = AngleCube3 - navigator.cube.angle;
+                            if(angle_diff > 360) angle_diff -= 360;
+                            else if(angle_diff < -360) angle_diff += 360;
+
                             if(Math.Abs(angle_diff) < 3)
                             {
                                 navigator.handle.Stop();
@@ -1608,7 +1664,10 @@ public class NewSecondFloor : MonoBehaviour
                         {            
                             // 3-2-4. Cube3(=toio_dict[3])をgammaまで回転させる
                             int angle_diff = gamma - navigator.cube.angle;
-                            if(Math.Abs(angle_diff) < 5)
+                            if(angle_diff > 360) angle_diff -= 360;
+                            else if(angle_diff < -360) angle_diff += 360;
+
+                            if(Math.Abs(angle_diff) < 3)
                             {
                                 navigator.handle.Stop();
                                 phase += 1;
@@ -1648,6 +1707,9 @@ public class NewSecondFloor : MonoBehaviour
                         {
                             // 3-2-6. Cube3(=toio_dict[3])をAngleCube3まで回転させる
                             int angle_diff = AngleCube3 - navigator.cube.angle;
+                            if(angle_diff > 360) angle_diff -= 360;
+                            else if(angle_diff < -360) angle_diff += 360;
+
                             if(Math.Abs(angle_diff) < 3)
                             {
                                 navigator.handle.Stop();
@@ -1716,6 +1778,9 @@ public class NewSecondFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[6])
                         {
                             int angle_diff = AngleCube6 - navigator.cube.angle;
+                            if(angle_diff > 360) angle_diff -= 360;
+                            else if(angle_diff < -360) angle_diff += 360;
+
                             if(Math.Abs(angle_diff) < 3)
                             {
                                 navigator.handle.Stop();
@@ -1801,6 +1866,9 @@ public class NewSecondFloor : MonoBehaviour
                         {            
                             // 3-2-4. Press(=toio_dict[6])をgammaまで回転させる
                             int angle_diff = gamma - navigator.cube.angle;
+                            if(angle_diff > 360) angle_diff -= 360;
+                            else if(angle_diff < -360) angle_diff += 360;
+
                             if(Math.Abs(angle_diff) < 5)
                             {
                                 navigator.handle.Stop();
@@ -1841,6 +1909,9 @@ public class NewSecondFloor : MonoBehaviour
                         {
                             // 3-2-6. Press(=toio_dict[6])をAngleCube7まで回転させる
                             int angle_diff = AngleCube7 - navigator.cube.angle;
+                            if(angle_diff > 360) angle_diff -= 360;
+                            else if(angle_diff < -360) angle_diff += 360;
+                            
                             if(Math.Abs(angle_diff) < 3)
                             {
                                 navigator.handle.Stop();
@@ -1880,7 +1951,7 @@ public class NewSecondFloor : MonoBehaviour
                         if(navigator.cube.id == toio_dict[3])
                         {
                             float distance = Vector2.Distance(navigator.cube.pos, PosSlopeStart);
-                            if(distance < 3)
+                            if(distance < 7)
                             {
                                 navigator.handle.Stop();
                                 phase += 1;

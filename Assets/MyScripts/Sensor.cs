@@ -41,6 +41,7 @@ public class Sensor : MonoBehaviour
         {
             text += "Position:( "+cube.x+", "+cube.y+")\n";
             text += "Angle:" + cube.angle+" deg";
+            Debug.Log("cube.id: " + cube.id);
         }
         
         if(text != "")

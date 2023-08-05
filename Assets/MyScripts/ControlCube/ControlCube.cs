@@ -43,26 +43,26 @@ public class ControlCube : MonoBehaviour
     {
         foreach (var cube in cubeManager.syncCubes)
         {   
-            if(cube.id == toio_dict[6] || cube.id == toio_dict[3]){
+            if(cube.id == toio_dict[1] || cube.id == toio_dict[2] || cube.id == toio_dict[7]){
                 if (Input.GetKey(KeyCode.LeftArrow)) {
                     cube.Move(-20, 20, 50);
                 } else if (Input.GetKey(KeyCode.RightArrow)) {
                     cube.Move(20, -20, 50);
                 } else if (Input.GetKey(KeyCode.UpArrow)) {
-                    cube.Move(50, 50, 50);
+                    cube.Move(100, 100, 100);
                 } else if (Input.GetKey(KeyCode.DownArrow)) {
-                    cube.Move(-50, -50, 50);
+                    cube.Move(-100, -100, 100);
                 }
             }
-            else if(cube.id == toio_dict[2] || cube.id == toio_dict[4]){
+            else if(cube.id == toio_dict[3]){
                 if (Input.GetKey(KeyCode.LeftArrow)) {
                     cube.Move(-20, 20, 50);
                 } else if (Input.GetKey(KeyCode.RightArrow)) {
                     cube.Move(20, -20, 50);
                 } else if (Input.GetKey(KeyCode.UpArrow)) {
-                    cube.Move(-50, -50, 50);
+                    cube.Move(-100, -100, 100);
                 } else if (Input.GetKey(KeyCode.DownArrow)) {
-                    cube.Move(50, 50, 50);
+                    cube.Move(100, 100, 100);
                 }
             }
         }
