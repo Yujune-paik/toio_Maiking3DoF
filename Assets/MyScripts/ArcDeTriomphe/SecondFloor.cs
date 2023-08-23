@@ -171,10 +171,6 @@ public class SecondFloor : MonoBehaviour
                         phase += 1;
 
                         Debug.Log("PosCube2:(" + PosCube2.x + ", " + PosCube2.y + ", " + AngleCube2 + ")");
-                        
-                        // toioが指定したtoioの上で止まるかのテストで使用する
-                        // check = 3;
-                        // phase = 0;
                     }
 
                     // 2. Slope(=toio_dict[7])をPosCube7の位置へ移動する

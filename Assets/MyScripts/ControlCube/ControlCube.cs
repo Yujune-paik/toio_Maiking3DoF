@@ -88,33 +88,33 @@ public class ControlCube : MonoBehaviour
         string text = "";
         foreach (var cube in cubeManager.syncCubes)
         {
-            text += "toio_dict[3]:(" + cube.x + "," + cube.y + "," + cube.angle + ") \n";
+            text += "(" + cube.x + "," + cube.y + "," + cube.angle + ") \n";
 
-            // toio_dict[3]とtoio_pos[0]の距離を表示する
-            if(cube.id == toio_dict[3]){
-                float distance = Vector2.Distance(cube.pos, toio_pos[0]);
-                text += "distance(toio_pos[0]): " + distance + "\n";
-            }
+            // // toio_dict[3]とtoio_pos[0]の距離を表示する
+            // if(cube.id == toio_dict[3]){
+            //     float distance = Vector2.Distance(cube.pos, toio_pos[0]);
+            //     text += "distance(toio_pos[0]): " + distance + "\n";
+            // }
 
-            // toio_dict[3]とtoio_pos[1]の距離を表示する
-            if(cube.id == toio_dict[3]){
-                float distance = Vector2.Distance(cube.pos, toio_pos[1]);
-                text += "distance(toio_pos[1]): " + distance + "\n";
-            }
+            // // toio_dict[3]とtoio_pos[1]の距離を表示する
+            // if(cube.id == toio_dict[3]){
+            //     float distance = Vector2.Distance(cube.pos, toio_pos[1]);
+            //     text += "distance(toio_pos[1]): " + distance + "\n";
+            // }
 
-            // toio_dict[3]とtoio_pos[2]の距離を表示する
-            if(cube.id == toio_dict[3]){
-                float distance = Vector2.Distance(cube.pos, toio_pos[2]);
-                text += "distance(toio_pos[2]): " + distance + "\n";
-            }
+            // // toio_dict[3]とtoio_pos[2]の距離を表示する
+            // if(cube.id == toio_dict[3]){
+            //     float distance = Vector2.Distance(cube.pos, toio_pos[2]);
+            //     text += "distance(toio_pos[2]): " + distance + "\n";
+            // }
 
-            if(cube.id == toio_dict[1]){
-                Debug.Log("toio_dict[1]と接続したよ");
-            }
+            // if(cube.id == toio_dict[1]){
+            //     Debug.Log("toio_dict[1]と接続したよ");
+            // }
 
-            else if(cube.id == toio_dict[4]){
-                Debug.Log("toio_dict[4]と接続したよ");
-            }
+            // else if(cube.id == toio_dict[4]){
+            //     Debug.Log("toio_dict[4]と接続したよ");
+            // }
         }
         if (text != "") this.label.text = text;
     }
